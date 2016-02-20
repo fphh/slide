@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Bar Charts</title>
+    <script language="javascript" src="../d3/d3.min.js"></script>
+
+    <link rel="stylesheet" href="format_v2.css" type="text/css" />
+
+  </head>
+  <body>
+
+    <h1>Bar Charts - Chained Transitions</h1>
+
+    <ol style="width:600px">
+
+      <li>Modifizieren Sie <em>updateData</em> so, dass die Elemente nach der Property <em>number</em> sortiert sind. Filtern sie die Elemente, deren <em>number</em> 0 ist weg. <b>Jetzt können die Elemente nicht mehr an Hand ihrer Reihenfolge identifiziert werden.</b></li>
+
+      <li>Definieren Sie eine Funktion <em>key</em>, die den Schlüssel zurückliefert, nach dem die Elemente identifiziert werden sollen (Property <em>cocktail</em>). Diese übergeben Sie der chained method <em>data</em> als zweites Argument.</li>
+      <li>Unsere Animation besteht aus drei Schritten:</li>
+      <ol>
+	<li>Die Balken verschwindener Elemente erhalten die Höhe 0.
+	<li>Die Balken erhalten ihre neue Position.</li>
+	<li>Neue Balken werden eingefügt.</li>
+      </ol>
+      Entsprechen müssen Sie also drei Transitionen verketten. Jede nachgelagerte Transition wird mit Hilfe von <em>tx.transtion().duration(msec)</em> von der vorhergehenden Transition <em>tx</em> erzeugt. In der <em>each</em>-Methode jeder Transition führen sie den jeweiligen Schritt aus. Die Attribute, auf die sich die Transition beziehen soll, müssen jeweils nach dem Aufruf von <em>transition</em> stehen.
+    </ol>
+
+    <div id="app">
+
+    <form>
+      <input type="button" value="Update Data" onclick="update()">
+    </form>
+
+    </div>
+
+    <script language="javascript" src="script_v3.js"></script>
+  </body>
+<html>

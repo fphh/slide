@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Bar Charts</title>
+    <script language="javascript" src="../d3/d3.min.js"></script>
+
+    <link rel="stylesheet" href="format.css" type="text/css" />
+
+  </head>
+  <body>
+
+    <h1>Bar Charts - Simple</h1>
+
+    <ol style="width:600px">
+      <li>Schreiben Sie eine Funktion <em>updateData</em>, die ein sortiertes Array von Objekten mit den Properties <em>cocktail</em> und <em>number</em> erzeugt. Number sollte sich im Interval [0, 10] befinen mit einer erhöhten Wahrscheinlichkeit für 0 (zu Demonstrationszwecken).</li>
+      <li>Definieren Sie Variablen für Höhe, Weite und Innenabstand Ihrer Graphik.</li>
+      <li>Erzeugen Sie in <em>#app</em> ein <em>svg</em>-Element mit Höhe und Breite. Benutzen Sie <em>d3.select</em>.</li>
+      <li>Erzeugen Sie ein Gruppenelement, das sie um den Innenabstand verschieben. Merken Sie sich das Gruppenelement in einer Variable. Alle späteren Manipulationen sollen bzgl. dieses Gruppenelements stattfinden.</li>
+
+      <li>Erzeugen Sie Skalen für <em>x</em> und <em>y</em>. <em>x</em> ist eine Ordinale Skala (<em>d3.scale.ordinal</em>), während <em>y</em> eine lineare Skala ist (<em>d3.scale.linear</em>).</li>
+      <li>Erzeugen Sie entsprechende Achsen mit <em>d3.svg.axis</em> und fügen Sie die jeweiligen Gruppenelemente hinzu. Sie sollten jetzt Achsen sehen können. Stylen Sie sie mit Hilfe von CSS.</li>
+      <li>Erzeugen Sie ein Array von Daten und fügen Sie über die <em>enter</em>-Selektion Rechtecke in das Chart ein. Um die Attribute <em>x, y, width, height</em> zu berechnen, nutzen Sie die von Ihnen erzeugten Skalierungsfunktionen. Stellen Sie sicher, dass Sie das SVG-Koordinatensystem verstanden haben.</li>
+      <li>Die Rechtecke sollen die CSS-Klasse <em>.bar</em> bekommen. Stylen Sie die Rechtecke.
+    </ol>
+
+
+    <div id="app"></div>
+
+    <script language="javascript" src="script_v1.js"></script>
+  </body>
+<html>

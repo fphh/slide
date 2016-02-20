@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Aufgabe 2</title>
+    <script language="javascript" src="../d3/d3.min.js"></script>
+
+  </head>
+  <body>
+
+    <h1>Aufgabe 2 - Der Tooltip</h1>
+
+    <ol style="width:600px">
+      <li>Fügen Sie ein Gruppenelement ein. Das Gruppenelement soll alle zum Tooltip gehörigen Teile enthalten. Setzen Sie die Sichtbarkeit (<em>opacity</em>) der Gruppe auf 0.</li>
+      <li>Fügen Sie ein Text-Element und ein Rechteck ein. Achten Sie auf die richtige <em>z-Ordnung</em>.</li>
+      <li>Überlegen Sie, welche Style-Elemente statisch sind und setzen Sie diese.</li>
+      <li>Lassen Sie Ihre Kreis-Elemente auf das <em>mouseenter-</em>Event horchen.
+      <li>Mit <a href="https://github.com/mbostock/d3/wiki/Selections#d3_mouse" target="_blank">d3.mouse(this)</a> bekommen Sie die Koordinaten der Mouse im Callback.</li>
+      <li>Benutzen Sie das <em>transform</em>-Attribute und verschieben Sie die Tooltip-Gruppe mit <em>translate</em>.
+      <li>Setzen Sie die Ausdehnung des Rechtecks, indem Sie mit <em>getBBox</em> die Größe des angezeigten Texts abfragen. Vergrößern Sie den Rahmen ein wenig, indem Sie ein paar Pixel dazuaddieren.</li>
+      <li>Die Kreiselemente sollen auf das <em>mouseleave-</em>Event horchen. Setzen Sie dann die Sichtbarkeit der Tooltip-Gruppe wieder auf 0.</li>
+    </ol>
+
+    <div id="app"></div>
+
+    <div style="width:600px">
+    <p>
+      Probleme gibt es, wenn der Mauszeiger über den Tooltip fährt. Dann verschwindet der Tooltip, weil der Kreis das <em>mouseleave-</em>Event erhält. Eine Lösung wäre, den Tooltip ebenfalls auf das <em>mousenter-</em>Event hören zu lassen und gegebenenfalls den Tooltip sichtbar zu schalten.
+    </p>
+    <p>
+      Falls der Mauszeiger dann den äußersten Kreis über den Tooltip verlässt, wird allerdings der Tooltip nicht mehr unsichtbar geschaltet. Um hier abzuhelfen, könnten Sie als allererstes ein Rechteck mit Länge und Breite von <em>100%</em> in das SVG einfügen. <em>fill</em> setzen Sie auf <em>transparent</em>. Das Rechteck ist somit unsichtbar, wird aber weiterhin über Maus-Events informiert. Beim <em>mouseenter-</em>Event sollte dieses Rechteck den Tooltip ebenfalls auf unsichtbar schalten.
+    </p>
+    <p>
+      Damit der Tooltip nicht sichtbar wird, wenn man über ihn fährt, sonder nur, wenn man über die Kreise fährt, ist es ratsam, den Tooltip aus dem sichtbaren Bereich zu entfernen, solange man sich mit der Maus nicht über den Kreisen befindet. Dazu kann man beim Tooltip z.B. <em>translate(-100, -100)</em> setzen.
+    </p>
+    </div>
+    <script language="javascript" src="script_v2.js"></script>
+  </body>
+<html>

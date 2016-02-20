@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Aufgabe 3</title>
+    <script language="javascript" src="../d3/d3.min.js"></script>
+
+  </head>
+  <body>
+
+    <h1>Aufgabe 3 - Zwei Kreise als Markierung</h1>
+
+    <div style="width:600px">
+      <p>Fügen Sie eine weitere Gruppe hinzu. In diese Gruppe fügen Sie zwei Kreise ein, einen für den inneren Rand und einen für den äußeren Rand. Sie können geimeinsame style-Attribute beider Kreise auch am Gruppenelement setzen (<em>opacity, fill (none), stroke-width</em>).</p>
+
+      <p>Im Callback für <em>mouseenter</em> setzen Sie die Radien der beiden Kreise. Den Index für das Array, dem Sie die Radien entnehmen, erhalten Sie dabei als zweiten Parameter des Callbacks. Achtung! Für den inneren Kreis kann der Index über die Array-Grenze hinausverweisen. In diesem Fall setzen sie Rahmenfarbe und Radius auf die des äußeren Kreises.</p>
+
+      <p>
+	Durch die mit <em>stroke-width</em> gesetzte Dicke kann es sein, dass Sie beim überfahren eines Kreises den Eindruck haben, der Kreis würde größer. Um dieses Flackern zu verhinden, setzen Sie bei den farbigen Kreisen einfach <em>stroke</em> auf die Kreisfarbe und <em>stroke-width</em> auf die selbe Dicke wie bei den markierenden Kreisen.
+      </p>
+
+      <p>Im Callback für <em>mouseenter</em> setzen sie die Gruppe sichtbar, im Callback für <em>mouseleave</em> unsichtbar.</p>
+      <p>
+	Ein Problem entsteht, wenn Sie jetzt über den Tooltip fahren. Dann werden die beiden markierenden Kreise unsichtbar. Um dies zu verhindern, wenden Sie den selben Trick wie bei der vorhergehenden Aufgabe an: Modifizieren Sie entsprechend die Maus-Events für Tooltip und Hintergrundrechteck.
+      </p>
+    </div>
+    <div id="app"></div>
+
+    <script language="javascript" src="script_v3.js"></script>
+  </body>
+<html>

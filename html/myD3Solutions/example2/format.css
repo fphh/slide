@@ -1,0 +1,19 @@
+
+body {
+	font: sans-serif;
+}
+
+.axis {
+	font: 10pt sans-serif;
+}
+
+.axis path,
+.axis line {
+	fill: none;
+	stroke: #000000;
+	shape-rendering: crispEdges;
+}
+
+.bar {
+	fill: darkcyan;
+}
