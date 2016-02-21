@@ -16,13 +16,23 @@ slideShow = do
   select
   selectEx
   styleAndAttr
-
+  dataJoin
+  selection
+  enterSelection
+  enterSelectionExercice
+  introSVG
+  circleElement
+  exerciseCircle
+  tooltipExercise
+  selectionExercise
+  
+--  groupElement
   
 titlePage :: SlideF String
 titlePage = do
   slide (word "") $ do
     para "Eine Einführung in" <| [pt24, center]
-    pimage "d3_logo.svg" <| [center]
+    pimage "html/d3_logo.svg" <| [center]
     para "von Dr. Heinrich Hördegen" <| [center]
     pline (email "hoerdegen@funktional.info") <| [center, monospace, green]
     newline
@@ -34,7 +44,7 @@ directory = do
   h "Verzeichnisstruktur" red $ do
     p $ do
       l "Downloaden Sie"
-      a "myD3.zip" "myD3.zip"
+      a "html/myD3.zip" "myD3.zip"
       l "und entpacken Sie es in Ihrem Arbeitsverzeichnis."
       l "Folgende Struktur sollten Sie vorfinden:"
     pcode Directory $ do
@@ -82,9 +92,9 @@ select = do
   h "d3.select, text & append" orange $ do
     p $ do
       l "Mit der Funktion" >> meth "d3.select"
-      l "wählen Sie ein Element aus dem DOM."
-      l "Mittels Method Chaining können Sie dem gewählten Element"
-      l "ein neues Element anhängen und dessen Text setzen."
+      l "wählen Sie einen Knoten im DOM."
+      l "Mittels Method Chaining können"
+      l "ein neuen Knoten einfügen und seinen Text setzen."
     pcode JavaScript $ do
       c "d3.select(\"#app\")"
       c "    .append(\"hello\")"
@@ -121,8 +131,162 @@ styleAndAttr = do
       l "können Sie den Elementen Attribute geben."
       l "Geben Sie einem Ihrer Listen-Elemente"
       l "z.B. ein class-Attribut und stylen Sie das Element darüber."
+    p $ do
+      l "Wenn Sie" >> tag "ol" >> l "gewählt haben"
+      l "können Sie z.B. das Attribut" >> attr "start" >> l "setzen."
+
+dataJoin :: SlideF String
+dataJoin = do
+  h "Data Joins" deepskyblue $ do
+    p $ do
+      l "Das grundlegende Konzept von" >> d3js >> l "sind Data Joins."
+      l "Data Joins verbinden Elemente des DOM's mit Daten."
+    p $ do
+      l "Zuerst wählt man die Elemente mit der Methode" >> m "selectAll"
+      l "aus, dann verbindet man die Elemente mit einem Array von Daten"
+      l "mittels der Methode" >> m "data" >> l "."
+    pcode JavaScript $ do
+      c "var selection = d3.select('svg')"
+      c "    .selectAll('li')"
+      c "    .data(['A', 'B', 'C'])"
+      
 
 
+selection :: SlideF String
+selection = do
+  h "Selektionen" deepskyblue $ do
+    p $ do
+      l "Auf der mit" >> m "selectAll" >> l "geschaffenen Selektion"
+      l "wird nun weitergearbeitet. Drei Fälle sind zu unterscheiden:"
+    p $ l "1. Das Datum ist neu im Datensatz:" >> em "enter" <| [blue]
+    p $ l "2. Das Datum war schon da:" >> em "update" <| [darksalmon]
+    p $ l "3. Das Datum ist nicht mehr vorhanden im Datensatz:" >> em "exit" <| [orange]
+    pimage "html/updateEnterExit.svg" <| [center]
+    p (l "Zunächst kümmern wir uns nur um neue Elemente.")
+
+
+enterSelection :: SlideF String
+enterSelection = do
+  h "Die enter-Selektion" deepskyblue $ do
+    p $ do
+      l "In der enter-Selektion sind nur neue Element."
+      l "Zu Beginn sind das also alle Elemente."
+      l "Auf der enter-Selektion arbeitet man, indem man" >> m "enter"
+      l "aufruft."
+    pcode JavaScript $ do
+      c $ "selection.enter()"
+      c $ "    .append('li')"
+      c $ "    .text(function (d, idx) { return d; })"
+    p $ do
+      l "Überall, wo Sie Text, Attribute oder Styles in Abhängigkeit"
+      l "der Daten angeben wollen, können Sie eine Funktion einsetzen."
+      l "Der erste Parameter ist das Datum, der zweite der Index im Array."
+
+
+enterSelectionExercice :: SlideF String
+enterSelectionExercice = do
+  h "Übung: enter-Selektion" deepskyblue $ do
+    p $ do
+      l "Definieren Sie ein Array mit Strings (z.B. Namen)."
+      l "Bauen Sie mit diesen Namen eine Liste."
+      l "Verwenden Sie Data Joins und die enter-Selektion."
+    p $ do
+      l "Geben sie den" >> (l "geraden" <| [red])
+      l "Punkten eine andere Textfarbe als"
+      l "ungeraden" <| [green] >> l "."
+    p $ do
+      l "Erweitern Sie die Daten im Array so, dass"
+      l "zu jedem Namen ein Alter assoziert ist."
+      l "Färben sie die Namen derer, die unter 18 sind"
+      l "mit einer anderen Farbe als die Namen derer, die über 18 sind."
+
+
+  
+introSVG :: SlideF String
+introSVG = do
+  h "Einführung zu SVG" crimson $ do
+    p $ do
+      l "SVG ist eine Spezifikation zur Beschreibung von Vektor-graphiken."
+      l "Es basiert auf XML und lässt sich gut in HTML-Seiten einbetten."
+    p $ do
+      l "SVG-Graphiken werden immer mit" >> tag "svg" >> l " umschlossen."
+      l "Als Attribute werden" >> attr "width"
+      l "und" >> attr "height" >> l "benötigt."
+    p $ do
+      l "Um SVG-Graphiken stand-alone im Browser betrachten zu können,"
+      l "muss man noch das Attribut" >> attr "xmlns" >> l "setzen."
+    pcode HTML $ do
+      c "<svg width='800' height='600'>"
+      c "    ..."
+      c "</svg>"
+
+
+
+
+circleElement :: SlideF String
+circleElement = do
+  h "Kreise" crimson $ do
+    p $ do
+      l "Kreise werden in SVG mit dem Element" >> tag "circle"
+      l "erzeugt. Sie erhalten die Attribute" >> attr "cx"
+      l "und" >> attr "cy" >> l "um den Mittelpunkt anzugeben,"
+      l "sowie" >> attr "r" >> l "für den Radius."
+      l "Natürlich können sie auch" >> attr "class"
+      l ", " >> attr "id" >> l "oder" >> attr "style" >> l "benützen."
+
+
+
+exerciseCircle :: SlideF String
+exerciseCircle = do
+  h "Übung: Kreise" crimson $ do
+    p $ do
+      l "In der Übung"
+      a "html/myD3Solutions/example1/index_v1.html" "Kreise"
+      l "erzeugen Sie ein Array mit zufälligen Radien."
+    p $ do
+      l "Statt Schleifen sollen Sie die Funktionen"
+      m "d3.range" >> l "," >> m "map" >> l ","
+      m "sort" >> l "und" >> m "d3.ascending" >> l "benützen."
+    p $ do
+      l "Machen Sie sich mit den"
+      a "https://github.com/mbostock/d3/wiki/Arrays" "Array-Funktionen"
+      l "vertraut."
+    p $ l "Verwenden Sie eine Skala von" >> d3js >> l ":"
+    pcode JavaScript $ do
+      c "> var color = d3.scale.category10()"
+      c "      .domain([0, 9])"
+      c "> color(4)"
+      c "> \"#9467bd\""
+
+
+groupElement :: SlideF String
+groupElement = do
+  h "Einführung zu SVG" crimson $ do
+    p $ do
+      l "Groupenelement Transfrom"
+
+
+
+tooltipExercise :: SlideF String
+tooltipExercise = do
+  h "Übung: Tooltip" pink $ do
+    p $ do
+      a "html/myD3Solutions/example1/index_v1.html" "Aufgabe 1"
+      a "html/myD3Solutions/example1/index_v2.html" "Aufgabe 2"
+      a "html/myD3Solutions/example1/index_v3.html" "Aufgabe 3"
+
+
+selectionExercise :: SlideF String
+selectionExercise = do
+  h "Übung: Selektionen" pink $ do
+    p $ do
+      l "Für folgende Übung brauchen Sie alles,"
+      l "was Sie über Selektionen gelernt haben:"
+    p $ a "html/myD3Solutions/selection/index.html" "Übung zu Selektionen"
+    p $ l "Überdies sollten Sie sich mit dem Gruppen-Element auskennen."
+
+
+      
 
 -- helper
 
@@ -156,9 +320,33 @@ meth =
         : []
   in (<| styles) . line
 
+tag :: String -> WordF String
+tag t =
+  let styles =
+        red
+        : monospace
+        : []
+  in line ("<" ++ t ++ "></" ++ t ++ ">") <| styles
+
+attr :: String -> WordF String
+attr =
+  let styles =
+        blueviolet
+        : monospace
+        : []
+  in (<| styles) . line
+
+em :: String -> WordF String
+em =
+  let styles =
+        cursive
+        : fsitalic
+        : fwbold
+        : []
+  in (<| styles) . line
+
 header :: String -> (Text, StyleValue) -> ParagraphF String -> SlideF String
 header str color = slide (line str <| [color])
-
 
 d3js :: WordF String
 d3js = line "d3.js" <| [orange]
@@ -168,20 +356,3 @@ nodejs = line "nodejs" <| [monospace, bgpink, blue]
 
 jsdom :: WordF String
 jsdom = line "jsdom" <| [monospace, green]
-
-                   
-{-
-select :: SlideF String
-select = do
-  slide (line "Selektieren von DOM-Elementen" <| [red]) $ do
-    pline $ do
-      line "Nach dem laden von"
-      line "d3.js" <| [orange]
-      -}
-      
--- https://en.wikipedia.org/wiki/Information_design
-{-
-var xs = d3.range(1, 10).map(function () { return Math.round(100*Math.random()); })
-undefined
-d3.select("#app").selectAll("p").data(xs).enter().append("p").text(function (d) { return d + " "; })
--}

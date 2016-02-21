@@ -38,14 +38,21 @@ color c = "color" .= SRGB.sRGB24show c
 
 red, blue, green, white, black :: (Text, StyleValue)
 red = color CN.red
+azure = color CN.azure
+blueviolet = color CN.blueviolet
 blue = color CN.blue
+deepskyblue = color CN.deepskyblue
+dodgerblue = color CN.dodgerblue
+darkblue = color CN.darkblue
 green = color CN.green
+darkgreen = color CN.darkgreen
 white = color CN.white
 black = color CN.black
 pink = color CN.pink
 lightblue = color CN.lightblue
 orange = color CN.orange
-
+darksalmon = color CN.darksalmon
+crimson = color CN.crimson
 
 bgcolor :: Colour Double -> (Text, StyleValue)
 bgcolor c = "backgroundColor" .= SRGB.sRGB24show c
@@ -177,7 +184,7 @@ radius :: Integer -> (Text, StyleValue)
 radius n = "border-radius" .= show n
 
 paddingL, paddingR :: Integer -> (Text, StyleValue)
-paddingL n = "padding-left" .= show n
-paddingR n = "padding-right" .= show n
-paddingT n = "padding-top" .= show n
-paddingB n = "padding-bottom" .= show n
+paddingL n = "paddingLeft" .= show n
+paddingR n = "paddingRight" .= show n
+paddingT n = "paddingTop" .= show n
+paddingB n = "paddingBottom" .= show n
