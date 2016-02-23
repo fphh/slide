@@ -23,6 +23,9 @@ slideShow = do
   introSVG
   circleElement
   exerciseCircle
+  textElement
+  rectElement
+  groupElement
   tooltipExercise
   selectionExercise
   
@@ -97,12 +100,12 @@ select = do
       l "ein neuen Knoten einfügen und seinen Text setzen."
     pcode JavaScript $ do
       c "d3.select(\"#app\")"
-      c "    .append(\"hello\")"
+      c "    .append(\"p\")"
       c "    .text(\"Guten Tag!\");"
     para "Als Ergebnis sollten Sie folgendes sehen:"
     pcode HTML $ do
       c "<div id=\"app\">"
-      c "    <hello>Guten Tag!</hello>"
+      c "    <p>Guten Tag!</p>"
       c "</div>"
 
 selectEx :: SlideF String
@@ -204,7 +207,7 @@ enterSelectionExercice = do
   
 introSVG :: SlideF String
 introSVG = do
-  h "Einführung zu SVG" crimson $ do
+  h "Einführung in SVG" crimson $ do
     p $ do
       l "SVG ist eine Spezifikation zur Beschreibung von Vektor-graphiken."
       l "Es basiert auf XML und lässt sich gut in HTML-Seiten einbetten."
@@ -233,8 +236,10 @@ circleElement = do
       l "sowie" >> attr "r" >> l "für den Radius."
       l "Natürlich können sie auch" >> attr "class"
       l ", " >> attr "id" >> l "oder" >> attr "style" >> l "benützen."
-
-
+    p $ do
+      l "Einen Beschreibung aller SVG-Elementen finden Sie"
+      a "https://developer.mozilla.org/en-US/docs/Web/SVG" "hier"
+      l "."
 
 exerciseCircle :: SlideF String
 exerciseCircle = do
@@ -258,15 +263,62 @@ exerciseCircle = do
       c "> color(4)"
       c "> \"#9467bd\""
 
+textElement :: SlideF String
+textElement = do 
+  h "Text" crimson $ do
+    p $ l "Das Element" >> tag "text" >> l "erlaubt es, Texte einzufügen:"
+    pcode JavaScript $ do
+      c "d3.select('#app')"
+      c "    .append('text')"
+      c "    .text('hello')"
+    p $ do
+      l "Die Possition des Textes wird mit den Attributen" >> attr "x"
+      l "und" >> attr "y" >> l "bestimmt."
+      l "Achten Sie darauf, dass dies die linke untere Ecke des Texts"
+      l "angibt."
+    p $ do
+      l "Den Text selbst fügen Sie mit" >> m "text" >> l "ein."
+      l "Auch hier können Sie stattdessen eine Funktion einsetzen,"
+      l "um auf die zugeordneten Daten zuzugreifen."
+      
+
+rectElement :: SlideF String
+rectElement = do 
+  h "Rechtecke" crimson $ do
+    p $ do
+      l "Das Element" >> tag "rect" >> l "fügt Rechtecke ein."
+      l "Die prinzipiellen Attribute von Rechtecken sind" >> attr "x"
+      l "," >> attr "y" >> l "," >> attr "width" >> l "und" >> attr "height"
+      l "."
+    p $ do
+      l "Achten Sie darauf, dass" >> attr "x"
+      l "und" >> attr "y" >> l "die linke obere Ecke des"
+      l "Rechtecks beschreiben, während" >> attr "width"
+      l "und" >> attr "height"
+      l "dessen Ausdehnung nach rechts unten angeben."
+
+
 
 groupElement :: SlideF String
 groupElement = do
-  h "Einführung zu SVG" crimson $ do
+  h "Das Gruppenelement" crimson $ do
     p $ do
-      l "Groupenelement Transfrom"
+      l "Das SVG-Gruppenelement" >> tag "g"
+      l "erlaubt es, SVG-Element zu gruppieren:"
+    pcode JavaScript $ do
+      c "var group = d3.select('#div');"
+      c "group.append('rect');"
+      c "group.append('text');"
+    p $ do
+      l "Das wichtigste Attribute ist" >> attr "transform" >> l "."
+      l "Um das Gruppenelement samt Inhalt entlang der x/y-Achsen"
+      l "zu verschieben, setzen Sie es auf" >> em "translate(x, y)" >> l ","
+      l "wobei" >> em "x" >> l "und" >> em "y"
+      l "die Zahl der Pixel angibt."
 
 
-
+      
+      
 tooltipExercise :: SlideF String
 tooltipExercise = do
   h "Übung: Tooltip" pink $ do
@@ -284,6 +336,8 @@ selectionExercise = do
       l "was Sie über Selektionen gelernt haben:"
     p $ a "html/myD3Solutions/selection/index.html" "Übung zu Selektionen"
     p $ l "Überdies sollten Sie sich mit dem Gruppen-Element auskennen."
+
+
 
 
       

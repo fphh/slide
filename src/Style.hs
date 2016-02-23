@@ -181,7 +181,7 @@ x <| attrs = List.foldr style x attrs
 
 
 radius :: Integer -> (Text, StyleValue)
-radius n = "border-radius" .= show n
+radius n = "borderRadius" .= show n
 
 paddingL, paddingR :: Integer -> (Text, StyleValue)
 paddingL n = "paddingLeft" .= show n
