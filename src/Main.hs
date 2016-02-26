@@ -36,7 +36,7 @@ import D3 (slideShow)
 foreign import javascript safe "highlightCode()" highlightCode :: IO ()
 foreign import javascript safe "$r = getLastKey()" getLastKey :: IO Int
 
-data View = SlideView | PrintView
+data View = SlideView | PrintView | TableOfContentView | LinkView
   deriving (Generic, NFData)
 
 data AppState a = AppState {
@@ -89,6 +89,71 @@ app = defineControllerView "app" store $ \state () -> do
   case sView state of
    SlideView -> slideView state
    PrintView -> printView state
+   TableOfContentView -> tocView state
+   LinkView -> linkView state
+
+linkView :: AppState Int -> ReactElementM ViewEventHandler ()
+linkView (AppState _ slides _ sv) = do
+  let links = concat $ concatMap extractLinks slides
+      f :: (String, String) -> ReactElementM ViewEventHandler ()
+      f (url, _) = div_ [] $ do
+        a_ ["href" $= Text.pack url, "target" $= "_blank" ] (elemText url)
+
+      backToSlideShow =
+        div_
+        [ "className" $= "back-to-slides"
+        , onClick $ \_ _ -> dispatch (SetView SlideView)]
+        (elemText "<= Back to Slides")
+  backToSlideShow      
+  mapM_ f links
+  backToSlideShow
+  
+
+extractLinks (Free (Slide.Slide attrs hdr paras (Pure _))) =
+  extractLinksPara paras
+extractLinks _ = return []
+
+extractLinksPara (Free (Slide.Paragraph Slide.Text attrs ws k)) = do
+  xs <- extractLinksWord ws
+  ys <- extractLinksPara k
+  return (xs ++ ys)
+extractLinksPara (Free (Slide.Paragraph (Slide.Image url) attrs ws k)) = do
+  xs <- extractLinksWord ws
+  ys <- extractLinksPara k
+  return $ (url, "Image") : xs ++ ys
+extractLinksPara _ = return []
+  
+extractLinksWord (Free (Slide.Word (Slide.Link url) attrs w k)) = do
+  xs <- extractLinksWord k
+  return $ (url, w):xs
+extractLinksWord (Free (Slide.Word _ attrs w k)) =
+  extractLinksWord k
+extractLinksWord _ = return []
+
+
+
+tocView :: AppState Int -> ReactElementM ViewEventHandler ()
+tocView (AppState _ slides _ sv) =
+  let idx = [0..]
+      cb page _ _ =
+        [SomeStoreAction store (JumpToPage page)]
+        ++ dispatch (SetView SlideView)
+      f 0 _ = h3_ [] (elemText "Table of Content")
+      f page s = div_ [ "className" $= "tableOfContent"] $ do
+        div_ [ "className" $= "toc-page-number"] (elemText (show page ++ "."))
+        toTocItem page sv s
+  in zipWithM_ f idx slides
+
+toTocItem :: Int -> View -> Slide.SlideF String -> ReactElementM ViewEventHandler ()
+toTocItem page sv (Free (Slide.Slide attrs hdr paras (Pure _))) =
+  let cb page _ _ =
+        [SomeStoreAction store (JumpToPage page)]
+        ++ dispatch (SetView SlideView)
+  in span_ [ "className" $= "toc-item"
+           , onClick (cb page) 
+           ] (toWord hdr)
+toTocItem _ _ _ = return ()
+
 
 slideView :: AppState Int -> ReactElementM ViewEventHandler ()
 slideView state = do                     
@@ -178,7 +243,8 @@ footer _ = do
   div_ [ "className" $= "footer" ] $
      ul_ $ do
        li_ [onClick $ \_ _ -> dispatch (SetView PrintView)] (elemText "Print View")
-       -- li_ [onClick $ \_ _ -> dispatch (SetView PrintView)] (elemText "JSON Export")
+       li_ [onClick $ \_ _ -> dispatch (SetView TableOfContentView)] (elemText "Table of Content")
+       li_ [onClick $ \_ _ -> dispatch (SetView LinkView)] (elemText "Links")
 
 main :: IO ()
 main = do
