@@ -1,7 +1,7 @@
 
 
 body {
-    font: 16pt/24pt verdana, sans-serif !important;
+    font: 16pt/24pt verdana, sans-serif;
 }
 
 #app {
@@ -37,7 +37,6 @@ body {
 }
 
 .print-slide {
-    font-size:12pt;
     width: 640px;
     border-top: 1px solid #000;
     page-break-inside:avoid;
@@ -64,6 +63,14 @@ body {
 .back-to-slides {
     color: #dd0000;
     cursor: pointer;
+    font-size:12pt;
+}
+
+.back-to-slides:before {
+    content: "\21D0";
+    display: inline-block;
+    margin-right: 12px;
+    font-size:12pt;
 }
 
 .toc-page-number {
@@ -108,7 +115,6 @@ body {
 }
 
 .word {
-    font-size: 16pt !important;
 }
 
 

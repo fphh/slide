@@ -26,8 +26,16 @@ slideShow = do
   textElement
   rectElement
   groupElement
+  mouseEvents
   tooltipExercise
+  selectionII
+  selectionExit
+  selectionUpdate
+  selectionEnterAndUpdate
+  selectionDataIndex
+  transitions
   selectionExercise
+  theEnd
   
 --  groupElement
   
@@ -247,7 +255,7 @@ exerciseCircle = do
     p $ do
       l "In der Übung"
       a "html/myD3Solutions/example1/index_v1.html" "Kreise"
-      l "erzeugen Sie ein Array mit zufälligen Radien."
+      l "erzeugen Sie ein Array mit zufälligen Radien, aufsteigen sortiert."
     p $ do
       l "Statt Schleifen sollen Sie die Funktionen"
       m "d3.range" >> l "," >> m "map" >> l ","
@@ -315,33 +323,176 @@ groupElement = do
       l "zu verschieben, setzen Sie es auf" >> em "translate(x, y)" >> l ","
       l "wobei" >> em "x" >> l "und" >> em "y"
       l "die Zahl der Pixel angibt."
+    p $ do
+      l "Andere Transformationen sind " >> em "scale"
+      l "und" >> em "rotate" >> l "."
 
+mouseEvents :: SlideF String
+mouseEvents = do
+  h "Mouse Events" crimson $ do
+    p $ do
+      l "Mit der Methode" >> m "on" >> l "fügen Sie Ihren Elementen"
+      l "Mouse-Event-Listener hinzu."
+    pcode JavaScript $ do
+      c "svg.selectAll('circle')"
+      c "    .on('click', function (d, idx) { ... });"
+    p $ do
+      l "Wichtige Mouse-Events sind auch" >> em "mouseenter"
+      l "und" >> em "mouseleave" >> l ". Hier finden Sie einen Überblick über"
+      a "https://developer.mozilla.org/en-US/docs/Web/Events#Standard_events" "Mouse Events"
+      l "."
+    p $ do
+      l "Im Callback bekommen Sie mit" >> m "d3.select(this)"
+      l "einen Zeiger auf das Mouse-Event zurück."
 
-      
-      
 tooltipExercise :: SlideF String
 tooltipExercise = do
-  h "Übung: Tooltip" pink $ do
+  h "Übung: Tooltip" crimson $ do
     p $ do
-      a "html/myD3Solutions/example1/index_v1.html" "Aufgabe 1"
-      a "html/myD3Solutions/example1/index_v2.html" "Aufgabe 2"
-      a "html/myD3Solutions/example1/index_v3.html" "Aufgabe 3"
+      l "Im Beispiel"
+      a "html/myD3Solutions/example1/index_v2.html" "Tooltip"
+      l "erweitern Sie Ihre Kreise um Tooltips."
+    p $ do
+      l "Um die Maße des Tooltips zu berechnen, setzen Sie"
+      l "im Callback zuerst dessen Text neu,"
+      l "dann rufen Sie auf dem Text-Konten die Methode " >> m "getBBox"
+      l "auf."
+    pcode JavaScript $ do
+      c "text.text('neuer text');"
+      c "var bbox = text.node().getBBox();"
+      
+    p $ do
+      l "Je nach Zeit und Laune können Sie zur Übung diese"
+      a "html/myD3Solutions/example1/index_v3.html" "Aufgabe"
+      l "bearbeiten."
+
+
+selectionII :: SlideF String
+selectionII = do
+  h "Nochmal Selektionen" green $ do
+    p $ do
+      l "Die Selektionen entstehen beim Aufrufen von" >> m "data"
+    pcode JavaScript $ do
+      c "var selection = svg"
+      c "    .selectAll('circle')"
+      c "    .data(newData);"
+    p $ do
+      l "Jedes Mal, wenn man neue Daten darstellen will,"
+      l "muss man also" >> m "data" >> l "aufrufen."
+      l "Drei Selektionen gibt es:" >> em "enter," <| [blue]
+      em "update" <| [darksalmon] >> l "und" >> em "exit" <| [orange]
+      l "."
+    pimage "html/updateEnterExit.svg" <| [center]
+
+selectionExit :: SlideF String
+selectionExit = do
+  h "Die Exit-Selektion" green $ do
+    p $ do
+      l "Die Exit-Selektion dient üblicherweise dazu,"
+      l "Elemente zu entfernen, indem man" >> m "remove" >> l "aufruft."
+    pcode JavaScript $ do
+      c "selection"
+      c "    .exit()"
+      c "    .remove();"
+
+selectionUpdate :: SlideF String
+selectionUpdate = do
+  h "Die Update-Selektion" green $ do
+    p $ do
+      l "Die Update-Selektion dient dazu, die Attribute und Styles der"
+      l "verbliebenen Elemente neu zu setzen:"
+    pcode JavaScript $ do
+      c "selection"
+      c "    .attr('cx', function (d, idx) { ... });"
+      c "    .attr('cy', function (d, idx) { ... });"
+      c "    .style('fill', 'yellow');"
+    p $ do
+      l "Hierzu muss man nicht erst eine spezielle Methode wie"
+      m "enter" >> l "oder" >> m "exit" >> l "aufrufen."
+
+selectionEnterAndUpdate :: SlideF String
+selectionEnterAndUpdate = do
+  h "Enter und Update" green $ do
+    p $ do
+      l "Sobald man die enter-Selektion bearbeitet hat"
+      l "vereinen sich update- und enter-Selektion."
+    pcode JavaScript $ do
+      c "var selection = svg"
+      c "    .selectAll('circle')"
+      c "    .data(newData);"
+      c "selection.enter().append('circle');"
+      c "selection.attr('r', 99);"
+    p $ do
+      l "Im Beispiel bekommen alle Kreise den Radius 99,"
+      l "sowohl die neuen als auch die schon vorhandenen."
+    p $ do
+      l "Die Reihenfolge, in der man die Selektionen bearbeitet,"
+      l "ist sehr wichtig."
+
+selectionDataIndex :: SlideF String
+selectionDataIndex = do
+  h "Identifizieren von Elementen" green $ do
+    p $ do
+      l "Der Methode" >> m "data" >> l "übergibt man zunächst ein Array."
+      l "Die Array-Indices identifizieren die Elemente,"
+      l "während die Selektionen berechnet werden."
+      l "Zusätzlich gibt es die Möglichkeit, eine Key-Funktion anzugeben:"
+    pcode JavaScript $ do
+      c "function identity(x) { return x; }"
+      c "var letters = 'abcdefgh'.split('');"
+      c "var selection = svg"
+      c "    .selectAll('circle')"
+      c "    .data(letters, identity);"
+    p $ do
+      l "Im Beispiel werden die Daten jetzt über ihren Inhalt,"
+      l "nämlich den Buchstaben, identifiziert."
+
+
+transitions :: SlideF String
+transitions = do
+  h "Transitionen" blue $ do
+    p $ do
+      l "Mit der chained Method" >> m "transition"
+      l "leitet man einen sachten Übergang von altem auf neuen Wert ein."
+      l "Mit" >> m "duration" >> l "gibt man dessen Dauer an."
+    pcode JavaScript $ do
+      c "cirlces.attr('r', 40)"
+      c "   .transtition()"
+      c "   .duration(1000)"
+      c "   .attr('cx', 99)"
+      c "   .style('fill', 'blue');"
+    p $ do
+      l "Bei Transtionen auf dem selben Element unterbricht"
+      l "die jungere die ältere."
+      l "Die ältere Transition bleibt möglicherweise unvollständig."
 
 
 selectionExercise :: SlideF String
 selectionExercise = do
-  h "Übung: Selektionen" pink $ do
+  h "Übung: Selektionen" blue $ do
     p $ do
-      l "Für folgende Übung brauchen Sie alles,"
-      l "was Sie über Selektionen gelernt haben:"
-    p $ a "html/myD3Solutions/selection/index.html" "Übung zu Selektionen"
-    p $ l "Überdies sollten Sie sich mit dem Gruppen-Element auskennen."
+      l "In der folgenden"
+      a "html/myD3Solutions/selection/index.html" "Übung"
+      l "können Sie den Umgang mit Selektionen und Transitionen üben."
+    p $ do
+      l "Mehr über den Umgang mit Selektionen finden Sie hier:"
+    pline $ a "https://bl.ocks.org/mbostock/3808218" "General Update Pattern I"
+    pline $ a "https://bl.ocks.org/mbostock/3808221" "General Update Pattern II"
+    pline $ a "https://bl.ocks.org/mbostock/3808234" "General Update Pattern III"
+    p $ do
+      l "Mehr über Tranitionen finden Sie hier:"
+    pline $ a "https://github.com/mbostock/d3/wiki/Transitions" "Transitions"
+    pline $ a "https://bost.ocks.org/mike/transition/" "Working with Transitions"
 
 
-
-
-      
-
+theEnd :: SlideF String
+theEnd = do
+  h "Vielen Dank" red $ do
+    pimage "html/d3_logo.svg" <| [center]
+    para "von Dr. Heinrich Hördegen" <| [center]
+    pline (email "hoerdegen@funktional.info") <| [center, monospace, green]
+    para "Not the End!" <| [center, fwbold, pt24]
+    
 -- helper
 
 

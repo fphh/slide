@@ -92,18 +92,20 @@ app = defineControllerView "app" store $ \state () -> do
    TableOfContentView -> tocView state
    LinkView -> linkView state
 
+
+backToSlideShow :: ReactElementM ViewEventHandler ()
+backToSlideShow =
+  div_
+  [ "className" $= "back-to-slides"
+  , onClick $ \_ _ -> dispatch (SetView SlideView)]
+  (elemText "Back to Slides")
+  
 linkView :: AppState Int -> ReactElementM ViewEventHandler ()
 linkView (AppState _ slides _ sv) = do
   let links = concat $ concatMap extractLinks slides
       f :: (String, String) -> ReactElementM ViewEventHandler ()
       f (url, _) = div_ [] $ do
         a_ ["href" $= Text.pack url, "target" $= "_blank" ] (elemText url)
-
-      backToSlideShow =
-        div_
-        [ "className" $= "back-to-slides"
-        , onClick $ \_ _ -> dispatch (SetView SlideView)]
-        (elemText "<= Back to Slides")
   backToSlideShow      
   mapM_ f links
   backToSlideShow
@@ -113,14 +115,15 @@ extractLinks (Free (Slide.Slide attrs hdr paras (Pure _))) =
   extractLinksPara paras
 extractLinks _ = return []
 
-extractLinksPara (Free (Slide.Paragraph Slide.Text attrs ws k)) = do
-  xs <- extractLinksWord ws
-  ys <- extractLinksPara k
-  return (xs ++ ys)
+
 extractLinksPara (Free (Slide.Paragraph (Slide.Image url) attrs ws k)) = do
   xs <- extractLinksWord ws
   ys <- extractLinksPara k
   return $ (url, "Image") : xs ++ ys
+extractLinksPara (Free (Slide.Paragraph _ attrs ws k)) = do
+  xs <- extractLinksWord ws
+  ys <- extractLinksPara k
+  return (xs ++ ys)
 extractLinksPara _ = return []
   
 extractLinksWord (Free (Slide.Word (Slide.Link url) attrs w k)) = do
@@ -133,16 +136,18 @@ extractLinksWord _ = return []
 
 
 tocView :: AppState Int -> ReactElementM ViewEventHandler ()
-tocView (AppState _ slides _ sv) =
+tocView (AppState _ slides _ sv) = do
   let idx = [0..]
       cb page _ _ =
         [SomeStoreAction store (JumpToPage page)]
         ++ dispatch (SetView SlideView)
       f 0 _ = h3_ [] (elemText "Table of Content")
       f page s = div_ [ "className" $= "tableOfContent"] $ do
-        div_ [ "className" $= "toc-page-number"] (elemText (show page ++ "."))
+        div_ [ "className" $= "toc-page-number"] (elemText (show (page+1) ++ "."))
         toTocItem page sv s
-  in zipWithM_ f idx slides
+  backToSlideShow
+  zipWithM_ f idx slides
+  backToSlideShow
 
 toTocItem :: Int -> View -> Slide.SlideF String -> ReactElementM ViewEventHandler ()
 toTocItem page sv (Free (Slide.Slide attrs hdr paras (Pure _))) =
@@ -164,7 +169,7 @@ slideView state = do
   footer state
 
 printView :: AppState Int -> ReactElementM ViewEventHandler ()
-printView (AppState _ slides _ sv) =
+printView (AppState _ slides _ sv) = do
   let idx = [0..]
       cb page _ _ =
         [SomeStoreAction store (JumpToPage page)]
@@ -173,8 +178,10 @@ printView (AppState _ slides _ sv) =
         div_ [ "className" $= "page-number"
              , onClick (cb page) ] (elemText ("Slide " ++ show (page+1)))
         toSlide sv s
-  in zipWithM_ f idx slides
-          
+  backToSlideShow
+  zipWithM_ f idx slides
+  backToSlideShow
+
 toWord :: Slide.WordF String -> ReactElementM ViewEventHandler ()
 toWord (Pure _) = return ()
 toWord (Free (Slide.Word Slide.LineBreak attrs w k)) = do

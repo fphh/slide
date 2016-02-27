@@ -53,6 +53,7 @@ lightblue = color CN.lightblue
 orange = color CN.orange
 darksalmon = color CN.darksalmon
 crimson = color CN.crimson
+seagreen = color CN.seagreen
 
 bgcolor :: Colour Double -> (Text, StyleValue)
 bgcolor c = "backgroundColor" .= SRGB.sRGB24show c
@@ -79,7 +80,9 @@ pt12 = fontSize 12
 pt16 = fontSize 16
 pt20 = fontSize 20
 pt24 = fontSize 24
+pt32 = fontSize 32
 pt36 = fontSize 36
+pt48 = fontSize 48
 
 data FontStyle = Normal | Italic | Oblique deriving (Show)
 
