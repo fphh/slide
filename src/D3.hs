@@ -478,10 +478,6 @@ selectionExercise = do
     pline $ a "https://bl.ocks.org/mbostock/3808218" "General Update Pattern I"
     pline $ a "https://bl.ocks.org/mbostock/3808221" "General Update Pattern II"
     pline $ a "https://bl.ocks.org/mbostock/3808234" "General Update Pattern III"
-    p $ do
-      l "Mehr über Tranitionen finden Sie hier:"
-    pline $ a "https://github.com/mbostock/d3/wiki/Transitions" "Transitions"
-    pline $ a "https://bost.ocks.org/mike/transition/" "Working with Transitions"
 
 
 theEnd :: SlideF String

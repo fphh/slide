@@ -55,8 +55,7 @@ attr =
 em :: String -> WordF String
 em =
   let styles =
-        cursive
-        : fsitalic
+        fsitalic
         : fwbold
         : []
   in (<| styles) . line
