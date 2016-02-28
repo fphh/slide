@@ -30,7 +30,7 @@ import Data.Monoid ((<>))
 import qualified Slide as Slide
 -- import SlideShow (slideShow)
 
-import D3 (slideShow)
+import D3b (slideShow)
 
 
 foreign import javascript safe "highlightCode()" highlightCode :: IO ()

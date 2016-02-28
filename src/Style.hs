@@ -67,6 +67,9 @@ bgblack = bgcolor CN.black
 bgpink = bgcolor CN.pink
 bglightblue = bgcolor CN.lightblue
 bglightgreen = bgcolor CN.lightgreen
+bgdarksalmon = bgcolor CN.darksalmon
+bgcrimson = bgcolor CN.crimson
+bgseagreen = bgcolor CN.seagreen
 
 
 fontSize :: Int -> (Text, StyleValue)
