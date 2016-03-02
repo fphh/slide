@@ -5,14 +5,21 @@ module D3b where
 {-
 
 * Aufbau großer Graphiken in Ebenen (z-order)
+* svg und inner mit margin
 * Farbverläufe
 * ClipPaths
 * Chained Transitions
 * viewbox-Attribut
 * canvas in IE
-
+* Referenzieren von urls im chart überall aus DOM möglich
+ <image x="20" y="10" width="320" height="240" xlink:href="raupen.jpg"/>
+* webpack/uglify
+* jsdom/serverside/nodejs
+* es2015 import/export
+* selectionen in variablen speichern statt nochmal select aufrufen
 
 -}
+
 
 import Style
 import Slide
@@ -25,6 +32,7 @@ slideShow = do
   axes
   callFunction
   recap
+  updateAxis
   ordinalScale
   barChartExample
   chainedTransitions
@@ -32,6 +40,15 @@ slideShow = do
   chainedTransitionsIII
   chainedTransitionsIV
   excercises
+  pathElement
+  lineFunction
+  clipPaths
+  timeScale
+  files
+  csvFiles
+  crossBrowserOrigin
+  yahooAPI
+  colorScales
   theEnd
 
 
@@ -85,7 +102,7 @@ callFunction = do
       em "yAxis" >> l "ist eine Funktion, der man eine Selektion"
       l "übergeben kann."
     pcode JavaScript $ do
-      c "var sel = d3.select('#app')"
+      c "var sel = d3.select('svg')"
       c "    .append('g')"
       c "    .attr('class', 'y axis');"
     p $ do
@@ -96,6 +113,26 @@ callFunction = do
     p $ do
       l "Beide Varianten bewirken, dass"
       l "eine Achse gezeichnet wird."
+
+updateAxis :: SlideF String
+updateAxis = do
+  h "Achsen updaten" deepskyblue $ do
+    p $ do
+      l "Beim updaten von Achsen ändert sich normalerweise"
+      l "der Definitionsbereich:"
+    pcode JavaScript $ do
+      c "xscale.domain(newDomain);"
+    p $ do
+      l "Dannach ruft man nocheinmal"
+      em "yAxis" >> l "auf der Selektion auf."
+    pcode JavaScript $ do
+      c "d3.select('.y.axis')"
+      c "    .transition()"
+      c "    .duration(1000)"
+      c "    .call(yAxis);"
+    p $ do
+      l "Dabei kann man natürlich Transitionen verwenden."
+
 
 recap :: SlideF String
 recap = do
@@ -211,7 +248,6 @@ chainedTransitionsIV = do
     pline $ a "https://github.com/mbostock/d3/wiki/Transitions" "Transitions"
     pline $ a "https://bost.ocks.org/mike/transition/" "Working with Transitions"
 
-
 excercises :: SlideF String
 excercises = do
   h "Übung: Farbgradienten" blueviolet $ do
@@ -227,6 +263,164 @@ excercises = do
       l "Wenn sich der Gradient an der Höhe des Charts orientieren soll"
       l "hilft es, wenn Sie" >> em "gradientUnits"
       l "auf" >> em "userSpaceOnUse" >> l "setzen."
+
+pathElement :: SlideF String
+pathElement = do
+  h "Das path-Element" maroon $ do
+    p $ do
+      l "Um beliebige Pfade zu zeichnen, eignet sich das"
+      tag "path" >> l "-Element."
+    p $ do
+      l "Das wichtigste Attribute ist" >> attr "d" >> l "."
+    p $ do
+      l "Eine grundlegende Einführung in das" >> tag "path"
+      l "-Element finden Sie"
+      a "https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths" "hier."
+    p $ do
+      l "Den Wert des" >> attr "d" >> l "-Attributes händisch zu"
+      l "bestimmen, ist beschwerlich."
+
+lineFunction :: SlideF String
+lineFunction = do
+  h "Die Linienfunktion" maroon $ do
+    p $ do
+      d3js >> l "stellt mehrere Generatoren für Formen bereit,"
+      l "unter anderem für Linien."
+    pcode JavaScript $ do
+      c "var line = d3.svg.line();"
+      c "    .x(function(d, i) { return xscale(d.x); })"
+      c "    .y(function(d, i) { return yscale(d.y); });"
+    p $ do
+      l "Mit der" >> em "line()" >> l "-Funktion können"
+      l "sie bequem einen Pfad zeichnen."
+    pcode JavaScript $ do
+      c "var path = svg.append('path');"
+      c "path.attr('d', line(dataArray));"
+    p $ do
+      l "Ändern sich die daten, setzen Sie" >> attr "d" >> l "neu."
+
+clipPaths :: SlideF String
+clipPaths = do
+  h "Das clipPath-Element" darkred $ do
+    p $ do
+      l "Ragt ein Pfad oder eine andere Form"
+      l "über die vorgesehene Fläche hinaus, kann es"
+      l "nützlich sein, diese zu beschneiden."
+    pcode HTML $ do
+      c "<svg>"
+      c "  <defs>"
+      c "    <clipPath id='myCP'>"
+      c "      <rect width='940' height='220'></rect>"
+      c "    </clipPath>"
+      c "  </defs>"
+      c "  ..."
+      c "  <path clip-path='url(#myCP)' d='...'></path>"
+      c "</svg>"
+    p $ do
+      l "Der Pfad ist nur innerhalb des Rechtecks sichtbar."
+
+timeScale :: SlideF String
+timeScale = do
+  h "Zeitskalen" seagreen $ do
+    p $ do
+      l "Wie auch lineare Skalen besitzen Zeitskalen die"
+      l "Methoden" >> em "range()" >> l "und" >> em "domain()."
+    pcode JavaScript $ do
+      c "var start = new Date('2010-01');"
+      c "var end = new Date('2011-01');"
+      c "var xscale = d3.time.scale()"
+      c "    .range([0, width-margin])"
+      c "    .domain([start, end]);"
+    p $ do
+      l "Wer speziellere Wünsche an die Formattierung"
+      l "der Labels hat, wird"
+      a "https://github.com/mbostock/d3/wiki/Time-Formatting" "hier"
+      l "fündig."
+
+    
+files :: SlideF String
+files = do
+  h "Dateien lesen" darkorange $ do
+    p $ do
+      d3js >> l "stellt einige Routinen zum einlesen von Datein bereit:"
+    p $ l "csv, tsv, json, html, text, xml" <| [center, monospace, darkgreen]
+    p $ do
+      l "Eine komplette Beschreibung des API finden Sie"
+      a "https://github.com/mbostock/d3/wiki/Requests" "hier."
+
+csvFiles :: SlideF String
+csvFiles = do
+  h "CSV Dateien einlesen" darkorange $ do
+    p $ do
+      l "Die Function" >> em "d3.csv()"
+      l "liest eine" >> em "csv" >> l "-Datei ein."
+    pcode JavaScript $ do
+      c "function parseJSON(d) { return { ... } }"
+      c "function someWork(err, arrOfJSON) { ... }"
+      c "d3.csv('file.csv', someWork).row(parseJSON);"
+    p $ do
+      l "Die Kopfzeile der Datei wird verworfen."
+      l "Die einzelnen Zeilen werden zu JSON-Objekten"
+      l "mit den jeweiligen Spalten-Titeln als Properties."
+      l "Die Werte der Properties sind Strings,"
+      l "die noch geparst werden müssen."
+
+crossBrowserOrigin :: SlideF String
+crossBrowserOrigin = do
+  h "Cross Browser Origin" darkorange $ do
+    p $ do
+      l "Die meisten Browser verhindern es,"
+      l "Dateien aus anderen Quellen zu lesen als der, von der"
+      l "von der das Skript stammt."
+    p $ do
+      l "In Chrome können Sie die Sicherheitsvorkehrungen abschalten:"
+    p $ (do
+      l "$ chrome"
+      l "--allow-file-access-from-files"
+      linebreak
+      l "--disable-web-security") <| [monospace, red]
+    p $ do
+      l "Firefox ist nicht ganz so streng wie Chrome."
+
+yahooAPI :: SlideF String
+yahooAPI = do
+  h "Übung: CSV einlesen" darkorange $ do
+    p $ do
+      l "Vom" >> l "Yahoo! Finance API" <| [darkgreen, fsitalic]
+      l "können Sie historische Aktienkurse herunterladen,"
+      l "z.B. von Google oder IBM:"
+    p $ do
+      a "http://ichart.yahoo.com/table.csv?s=GOOG"
+        "http://ichart.yahoo.com/table.csv?s=GOOG"
+    p $ do
+      l "Speichern Sie die Datei entweder auf Festplatte oder"
+      l "lesen Sie sie direkt vom Server (mit Chrome)."
+    hint $ do
+      l "Das API erlaubt nur eine begrenzte Anzahl von"
+      l "Zugriffen pro Tag pro IP-Adresse."
+    p $ do
+      l "Interessant sind die Spalten"
+      em "Date" >> l "und" >> em "Close."
+      l "Bearbeiten Sie folgende"
+      a "html/myD3Solutions/stocks/index.html" "Aufgabe."
+
+colorScales :: SlideF String
+colorScales = do
+  h "Farbskalen" blue $ do
+    p $ do
+      l "Für Farbskalen eignen sich sowohl ordinale als auch lineare Skalen."
+    pcode JavaScript $ do
+      c "var ord = d3.scale.ordinal()"
+      c "    .domain([1, 2, 3])"
+      c "    .range(['red', 'yellow', 'green']);"
+    pcode JavaScript $ do
+      c "var lin = d3.scale.linear()"
+      c "    .domain([1, 2, 3])"
+      c "    .range(['red', 'yellow', 'green']);"      
+    question $ l "Was ist der Unterschied?"
+    p $ do
+      l "Bearbeiten Sie diese"
+      a "html/myD3Solutions/colors/index.html" "Aufgabe."
 
 theEnd :: SlideF String
 theEnd = do
