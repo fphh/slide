@@ -96,7 +96,7 @@ app = defineControllerView "app" store $ \state () -> do
 backToSlideShow :: ReactElementM ViewEventHandler ()
 backToSlideShow =
   div_
-  [ "className" $= "back-to-slides"
+  [ "className" $= "back-to-slides dont-print"
   , onClick $ \_ _ -> dispatch (SetView SlideView)]
   (elemText "Back to Slides")
   

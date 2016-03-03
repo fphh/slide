@@ -156,7 +156,7 @@ dataJoin = do
       l "aus, dann verbindet man die Elemente mit einem Array von Daten"
       l "mittels der Methode" >> m "data" >> l "."
     pcode JavaScript $ do
-      c "var selection = d3.select('svg')"
+      c "var selection = d3.select('#app')"
       c "    .selectAll('li')"
       c "    .data(['A', 'B', 'C'])"
       
@@ -275,7 +275,7 @@ textElement = do
   h "Text" crimson $ do
     p $ l "Das Element" >> tag "text" >> l "erlaubt es, Texte einzufügen:"
     pcode JavaScript $ do
-      c "d3.select('#app')"
+      c "d3.select('svg')"
       c "    .append('text')"
       c "    .text('hello')"
     p $ do
@@ -313,7 +313,7 @@ groupElement = do
       l "Das SVG-Gruppenelement" >> tag "g"
       l "erlaubt es, SVG-Element zu gruppieren:"
     pcode JavaScript $ do
-      c "var group = d3.select('#div');"
+      c "var group = d3.select('svg').append('g');"
       c "group.append('rect');"
       c "group.append('text');"
     p $ do
@@ -336,8 +336,9 @@ mouseEvents = do
       c "svg.selectAll('circle')"
       c "    .on('click', function (d, idx) { ... });"
     p $ do
-      l "Wichtige Mouse-Events sind auch" >> em "mouseenter"
-      l "und" >> em "mouseleave" >> l ". Hier finden Sie einen Überblick über"
+      l "Wichtige Mouse-Events sind auch" >> em "mouseenter,"
+      em "mousemove," >> em "mouseleave" >> l "und" >> em "mouseout."
+      l "Hier finden Sie einen Überblick über"
       a "https://developer.mozilla.org/en-US/docs/Web/Events#Standard_events" "Mouse Events"
       l "."
     p $ do

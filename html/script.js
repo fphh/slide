@@ -20,15 +20,17 @@ function getLastKey() {
 function propagateEvent (e) {
     var x = document.getElementById("slide");
 
-    lastKey = e.keyCode;
+    if (x !== null) {
+	lastKey = e.keyCode;
 
-    var ne = new KeyboardEvent("keyup", {
-	bubbles : true,
-	cancelable : true,
-	keyCode : e.keyCode
-    });
+	var ne = new KeyboardEvent("keyup", {
+	    bubbles : true,
+	    cancelable : true,
+	    keyCode : e.keyCode
+	});
 
-    x.dispatchEvent(ne);
+	x.dispatchEvent(ne);
+    }
 }
 
 document.onkeydown = propagateEvent;

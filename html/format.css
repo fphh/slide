@@ -143,3 +143,9 @@ a:link {
 
 a:visited {
 }
+
+@media print {
+    .dont-print {
+	display: none;
+    }
+}

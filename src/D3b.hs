@@ -6,17 +6,23 @@ module D3b where
 
 * Aufbau großer Graphiken in Ebenen (z-order)
 * svg und inner mit margin
-* Farbverläufe
-* ClipPaths
-* Chained Transitions
+
 * viewbox-Attribut
 * canvas in IE
+
+
 * Referenzieren von urls im chart überall aus DOM möglich
- <image x="20" y="10" width="320" height="240" xlink:href="raupen.jpg"/>
+
+
+<image x="20" y="10" width="320" height="240" xlink:href="raupen.jpg"/>
 * webpack/uglify
 * jsdom/serverside/nodejs
 * es2015 import/export
 * selectionen in variablen speichern statt nochmal select aufrufen
+* Pfad-Element Punkte pushen
+
+* Javascript
+
 
 -}
 
@@ -34,6 +40,7 @@ slideShow = do
   recap
   updateAxis
   ordinalScale
+  layers
   barChartExample
   chainedTransitions
   chainedTransitionsII
@@ -49,6 +56,8 @@ slideShow = do
   crossBrowserOrigin
   yahooAPI
   colorScales
+  viewbox
+  webpackSlide
   theEnd
 
 
@@ -163,6 +172,25 @@ ordinalScale = do
       a "https://github.com/mbostock/d3/wiki/Ordinal-Scales#ordinal_rangeBands" "hier"
       l "."
 
+layers :: SlideF String
+layers = do
+  h "Aufbau komplexer Graphiken" green $ do
+    p $ do
+      l "Für große Graphiken sollten Sie"
+      l "mehrere Layers in Form von Gruppenelementen"
+      l "anzulegen und diese mit" >> em "transform"
+      l "zu positionieren."
+    pcode HTML $ do
+      c "<svg>"
+      c "    <defs> ... </defs>"
+      c "    <g id='chart'> ... </g>"
+      c "    <g id='tooltip'> ... </g>"
+      c "    ..."
+      c "</svg>"
+    p $ do
+      l "Die Layer sorgen dafür, dass die Elemente"
+      l "auf der richtigen Ebene im" >> em "z-index"
+      l "landen."
 
 barChartExample :: SlideF String
 barChartExample = do
@@ -192,17 +220,17 @@ chainedTransitions = do
       l "die vorausgehende Transition unvollendet."
     hint $ do
       l "Manche Situationen kann man so auch gar nicht darstellen."
-      l "Sobald man z.B. eine Transition auf enter+update"
-      l "anwendet, werden die Transitionen für enter"
-      l "und update unterbrochen."
+      l "Sobald man z.B. eine Transition auf" >> em "enter+update"
+      l "anwendet, werden die Transitionen für" >> em "enter"
+      l "und" >> em "update" >> l "unterbrochen."
 
 chainedTransitionsII :: SlideF String
 chainedTransitionsII = do
   h "Transitionen aus dem Nichts" lightblue $ do
     p $ do
-      l "Eine Transition kann unabhängig von einer Selektion"
-      l "erzeugt werden. Nach einem Aufruf von" >> em "each()"
-      l "kann man im Callback die Selektionen bearbeiten."
+      l "Eine Transition kann auch ohne Selektion"
+      l "erzeugt werden. Im Callback von" >> em "each()"
+      l "kann man die Selektionen bearbeiten."
     pcode JavaScript $ do
       c "var t0 = d3.transition().duration(500).each(cb);"
       c "function cb() {"
@@ -213,7 +241,7 @@ chainedTransitionsII = do
       c "}"
     p $ do
       l "Der Aufruf von" >> em "transtion()"
-      l "auf der Selektion löst die Transition aus."
+      l "löst die Transition für die nachfolgenden Attribute und Styles aus."
 
 
 chainedTransitionsIII :: SlideF String
@@ -422,11 +450,76 @@ colorScales = do
       l "Bearbeiten Sie diese"
       a "html/myD3Solutions/colors/index.html" "Aufgabe."
 
+viewbox :: SlideF String
+viewbox = do
+  h "Ausdehnung und Skalierung" green $ do
+    p $ do
+      l "Will man eine skalierend Graphik,"
+      l "sollte man das" >> attr "viewbox" >> l "-Attibut"
+      l "setzen. Auch kann man" >> attr "aspectRatio"
+      l "setzen, um das Verhältnis zwischen Höhe und Breite"
+      l "besser zu kontrollieren."
+    p $ do
+      l "Der" >> l "Internet Explorer" <| [darkgreen]
+      l "kann die Ausdehnung von SVG-Graphiken"
+      l "in Tabellen und Table-Layouts nicht"
+      l "richtig berechnen."
+      l "Hier hilft es vorher, ein" >> tag "canvas"
+      l "-Element einzufügen, bei dem man ebenfalls"
+      l "die gewünschte Größe setzt."
+      attr "width" >> l "und" >> attr "height"
+      l "des SVG-Tags setzt man dann auf" >> em "'100%'." <| [monospace]
+    p $ do
+      l "Es gibt einen CSS-Style"
+      l "der verhindert, dass Linien in die Breite skalieren."
+
+webpackSlide :: SlideF String
+webpackSlide = do
+  h "Webpack" green $ do
+    p $ do
+      webpack >> l "ist eine elegante Möglichkeit, JavaScript-Applikationen,"
+      l "die aus mehreren Datein bestehen, zu bündeln."
+    p $ do
+      l "Traditionelles JavaScript kennt keine Module."
+      l "Für" >> webpack >> l "gibt es einen" >> em "Loader (es2015),"
+      l "der es erlaubt" >> l "EcmaScript 6" <| [darkgreen, fsitalic]
+      l "zu JavaScript zu kompilieren."
+      l "Damit können Sie das neue eingeführte Modul-System verwenden."
+    p $ do
+      webpack >> l "erlaubt es auch, CSS-Stylesheets"
+      l "in Form von" >> tag "style" >> l "-Tags zu inlinen."
+      l "Das ist besonders interessant, wenn man Graphik"
+      l "serverseitig erzeugen will (z.B. mit" >> jsdom >> l "),"
+      l "um sie dann mit" >> em "librsvg" <| [darkgreen]
+      l "o.ä. zu PDF oder PNG zu transformieren."
+
+      
+{-
+
+* viewbox-Attribut
+* canvas in IE
+
+
+* Referenzieren von urls im chart überall aus DOM möglich
+
+
+<image x="20" y="10" width="320" height="240" xlink:href="raupen.jpg"/>
+* webpack/uglify
+* jsdom/serverside/nodejs
+* es2015 import/export
+* selectionen in variablen speichern statt nochmal select aufrufen
+* Pfad-Element Punkte pushen
+
+* Javascript
+
+-}
+
+
 theEnd :: SlideF String
 theEnd = do
   h "Vielen Dank" red $ do
     pimage "html/d3_logo.svg" <| [center]
     para "von Dr. Heinrich Hördegen" <| [center]
     pline (email "hoerdegen@funktional.info") <| [center, monospace, green]
-    para "Not the End!" <| [center, fwbold, pt24]
+    para "Still not the End!" <| [center, fwbold, pt24]
     

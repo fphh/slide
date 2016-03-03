@@ -66,6 +66,10 @@ header str color = slide (line str <| [color])
 d3js :: WordF String
 d3js = line "d3.js" <| [orange]
 
+webpack :: WordF String
+webpack = line "webpack" <| [darkorange]
+
+
 nodejs :: WordF String
 nodejs = line "nodejs" <| [monospace, bgpink, blue]
 
