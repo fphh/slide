@@ -19,8 +19,12 @@ executable slide
   main-is:             Main.hs
   other-modules:       Style,
                        Slide,
-                       SlideShow,
-                       D3   
+                       D3,
+                       D3b,
+                       Haskell.SlideShow,
+                       Haskell.Intro,
+                       Haskell.Title,
+                       Haskell.Recursion
   -- other-extensions:    
   build-depends:       base >=4.8 && <4.9,
                        react-flux,

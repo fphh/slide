@@ -30,8 +30,9 @@ import Data.Monoid ((<>))
 import qualified Slide as Slide
 -- import SlideShow (slideShow)
 
-import D3b (slideShow)
+-- import D3b (slideShow)
 
+import Haskell.SlideShow (slideShow)
 
 foreign import javascript safe "highlightCode()" highlightCode :: IO ()
 foreign import javascript safe "$r = getLastKey()" getLastKey :: IO Int

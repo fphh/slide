@@ -77,3 +77,17 @@ jsdom :: WordF String
 jsdom = line "jsdom" <| [monospace, green]
 
 hint m = pline m <| [bgdarksalmon]
+
+
+pcenter line_ = (p $ line_) <| [center]
+
+def =
+  let styles =
+        fsitalic
+        : blueviolet
+        : []
+  in (<| styles) . line
+
+ghci = line "GHCi" <| [darkgreen, fsitalic]
+
+cmd str = line str <| [monospace, green]
