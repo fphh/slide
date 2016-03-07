@@ -57,8 +57,8 @@ polynom = do
       c "p x = an * x^n + ... + a1 * x^1 + a0"
     p $ do
       l "Beispiele für Polynome:"
-    p $ def "p(x)" <| [marginL 40] >> l "= 2*x³ - 5" <| [marginL 10]
-    p $ def "q(x) = x² - 7*x¹² + 99" <| [marginL 20]
+    p $ def "p(x)" <| [marginL 40] >> def "= 2*x³ - 5" <| [marginL 10]
+    p $ def "q(x)" <| [marginL 40] >> def " = x² - 7*x¹² + 99" <| [marginL 10]
     p $ do
       l "Der Grad eines Polynoms ist seine höchste Potenz"
 
