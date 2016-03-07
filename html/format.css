@@ -127,6 +127,10 @@ p {
     padding-right:10px;
 }
 
+img {
+    width: inherit;
+}
+
 a {
     text-decoration: none;
 }

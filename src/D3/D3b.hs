@@ -1,6 +1,6 @@
 
 
-module D3b where
+module D3.D3b where
 
 {-
 

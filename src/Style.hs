@@ -197,3 +197,14 @@ paddingL n = "paddingLeft" .= show n
 paddingR n = "paddingRight" .= show n
 paddingT n = "paddingTop" .= show n
 paddingB n = "paddingBottom" .= show n
+
+
+width :: Integer -> (Text, StyleValue)
+width n = "width" .= show n
+
+
+data Maring = Auto deriving (Show)
+
+marginL, marginR :: (Show a) => a -> (Text, StyleValue)
+marginL n = "marginLeft" .= show n
+marginR n = "marginRight" .= show n

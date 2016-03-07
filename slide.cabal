@@ -19,8 +19,8 @@ executable slide
   main-is:             Main.hs
   other-modules:       Style,
                        Slide,
-                       D3,
-                       D3b,
+                       D3.D3,
+                       D3.D3b,
                        Haskell.SlideShow,
                        Haskell.Intro,
                        Haskell.Title,

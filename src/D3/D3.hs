@@ -1,6 +1,6 @@
 
 
-module D3 where
+module D3.D3 where
 
 import Style
 import Slide

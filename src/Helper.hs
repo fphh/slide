@@ -91,3 +91,12 @@ def =
 ghci = line "GHCi" <| [darkgreen, fsitalic]
 
 cmd str = line str <| [monospace, green]
+
+
+
+chapter :: String -> String ->  (Text, StyleValue) -> SlideF String
+chapter h t c = do
+  header h c $ do
+    newline
+    (p $ l t) <| [center, fwbold, pt24]
+

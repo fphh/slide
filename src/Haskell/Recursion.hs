@@ -10,27 +10,19 @@ import Helper
 
 slideShow :: SlideF String
 slideShow = do
-  recursion
+  chapter "Rekursion über" "Ganze Zahlen und Listen" seagreen
   naturalNumbers
   recursiveFunction
   ex1a
   ex1b
   ex2
   ghciTips
-  recursiveList
+  chapter "Noch ein rekursiver Datentyp:" "Listen" maroon
   lists
   listsExample
   exListsI
   exListsII
   exListsIII
-
-
-
-recursion :: SlideF String
-recursion = do
-  header "Recursion über" seagreen $ do
-    newline
-    (p $ l "Ganze Zahlen und Listen") <| [center, fwbold, pt24]
 
 
 naturalNumbers :: SlideF String
@@ -123,12 +115,6 @@ ghciTips = do
       l "."
     pcode Haskell $ c "> :r"
 
-
-recursiveList :: SlideF String
-recursiveList = do
-  header "Noch ein rekursiver Datentyp:" maroon $ do
-    newline
-    (p $ l "Listen") <| [center, fwbold, pt24]
 
 
 lists :: SlideF String
