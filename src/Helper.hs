@@ -92,6 +92,7 @@ ghci = line "GHCi" <| [darkgreen, fsitalic]
 
 cmd str = line str <| [monospace, green]
 
+expr = cmd
 
 
 chapter :: String -> String ->  (Text, StyleValue) -> SlideF String
@@ -99,4 +100,35 @@ chapter h t c = do
   header h c $ do
     newline
     (p $ l t) <| [center, fwbold, pt24]
+
+
+haskell = pcode Haskell
+
+
+
+
+lib :: String -> WordF String
+lib =
+  let styles =
+        bgdarkblue
+        : yellow
+        : monospace
+        : fsitalic
+        : radius 99
+        : paddingL 10
+        : paddingR 10
+        : paddingT 1
+        : paddingB 1
+        : []
+  in (<| styles) . line
+
+func :: String -> WordF String
+func =
+  let styles =
+        maroon
+        : monospace
+        : fsitalic
+        : fwbold
+        : []
+  in (<| styles) . line
 

@@ -9,7 +9,6 @@ import Helper
 
 slideShow :: SlideF String
 slideShow = do
-  chapter "" "Differenzenmaschine" red
   differenceEnginePicture
   deIntro
   polynom
@@ -20,6 +19,8 @@ slideShow = do
   allZero
   loop
   lastSteps
+  sieveExercise
+  sieveExerciseII
   
 differenceEnginePicture :: SlideF String
 differenceEnginePicture = do
@@ -43,9 +44,9 @@ deIntro = do
       c "> next [1, 4, 9, 16]"
       c "25"
     p $ do
-      l "..., denn" >> cmd "5² = 25"
+      l "..., denn" >> expr "5² = 25"
       l "."
-    p $ l "Wir wollen die Funktion" >> cmd "next" >> l "implementieren!"
+    p $ l "Wir wollen die Funktion" >> func "next" >> l "implementieren!"
 
 
 polynom :: SlideF String
@@ -67,6 +68,7 @@ powerFunc = do
   h "Potenzfunktion" darkorange $ do
     p $ l "Zur Erinnerung die Potenzfunktion:"
     pcode Haskell $ do
+      c "(^) :: (Integral b, Num a) => a -> b -> a"
       c "x^0 = 1"
       c "x^1 = 1"
       c "x^n = x * x^(n-1)"
@@ -76,7 +78,7 @@ deBegin = do
   h "Der Anfang" red $ do
     p $ do
       l "Öffnen Sie eine neue Datei"
-      cmd "DifferenceEngine.hs"
+      em "DifferenceEngine.hs"
       l "."
     p $ do
       l "Beginnen Sie diese mit den Zeilen:"
@@ -84,10 +86,10 @@ deBegin = do
       c "module DifferenceEngine where"
       c "import qualified Data.List as List"
     p $ do
-      l "Definieren Sie ein Polynom" >> cmd "p"
+      l "Definieren Sie ein Polynom" >> expr "p"
       l "Ihrer Wahl mit Grad 3"
       l "und eine Liste"
-      cmd "xs = [p(0), p(1), p(2), p(3), p(4)]."
+      expr "xs = [p(0), p(1), p(2), p(3), p(4)]."
     p $ do
       l "Benutzen Sie dazu die Funktion map."
     p $ do
@@ -114,7 +116,7 @@ diffs = do
   h "Die Funktion diffs" red $ do
     p $ do
       l "Definieren Sie eine Funktion"
-    pcode Haskell $ do
+    haskell $ do
       c "diffs :: [Integer] -> [Integer]"
     p $ do
       l "die eine Zeile in die nächste überführt."
@@ -122,15 +124,15 @@ diffs = do
       l "Was sind geeignete Basisfälle?"
     p $ do
       l "Definieren Sie diff entweder rekursiv"
-      l "oder mit Hilfe der Funktionen" >> cmd "List.zipWith"
-      l "und" >> cmd "List.tail"
+      l "oder mit Hilfe der Funktionen" >> lib "zipWith"
+      l "und" >> lib "tail"
       l "."
     p $ do
       l "Wenn Sie fleißig sind, schreiben Sie beide Versionen."
     p $ do
-      l "Testen Sie" >> cmd "diffs"
+      l "Testen Sie" >> func "diffs"
       l "mit der von Ihnen definierten Folge"
-      cmd "xs"
+      expr "xs"
       l "."
 
 allZero :: SlideF String
@@ -142,29 +144,29 @@ allZero = do
     p $ do
       l "das prüft, ob eine Liste nur Nullen enthält."
     p $ do
-      l "Benützen Sie die Funktion" >> cmd "List.all"
+      l "Benützen Sie die Funktion" >> lib "all"
       l "."
     p $ do
-      l "Mit hilfe der Funktion" >> cmd "not"
+      l "Mit hilfe der Funktion" >> lib "not"
       l "erhalten Sie die Negation dieses Prädikats."
 
 
 loop :: SlideF String
 loop = do
-  h "Keine Schleife, aber fast" red $ do
+  h "Keine Schleife, aber trotzdem" red $ do
     p $ l "Schreiben Sie eine Funktion"
     pcode Haskell $ do
       c "allDiffs :: [Integer] -> [[Integer]]"
     p $ do
       l "so dass das Ergebnis eine Liste aller Differenzenlisten ist."
-      l "Dafür benutzen Sie Ihre Funktionen" >> cmd "diffs"
+      l "Dafür benutzen Sie Ihre Funktionen" >> func "diffs"
       l "."
       l "Stoppen Sie, sobald alle Zahlen einer Liste gleich 0 sind."
     p $ do
       l "Benutzen Sie die Funktionen"
-      cmd "List.iterate"
+      lib "iterate"
       l "und"
-      cmd "List.takeWhile"
+      lib "takeWhile"
       l "."
 
 
@@ -176,10 +178,10 @@ lastSteps = do
     pcode Haskell $ do
       c "next :: [Integer] -> Integer"
     p $ do
-      l "Sie nimmt das Ergebnis von" >> cmd "allDiffs"
+      l "Sie nimmt das Ergebnis von" >> func "allDiffs"
       l "und summiert die jeweil letzten Zahlen."
-      l "Benutzen Sie" >> cmd "sum, map"
-      l "und" >> cmd "last"
+      l "Benutzen Sie" >> lib "sum" >> l "," >> lib "map"
+      l "und" >> lib "last"
       l "."
     p $ do
       l "Prüfen Sie, ob next die nächste Zahl Ihrer Folge"
@@ -189,3 +191,38 @@ lastSteps = do
       c "True"
     p $ do
       l "Und fertig!!!" <| [center]
+
+
+sieveExercise :: SlideF String
+sieveExercise = do
+  h "Übung: Sieb des Eratosthenes" green $ do
+    p $ l "Das Sieb des Eratosthenes filtert alle Nicht-Primzahlen:"
+    haskell $ do
+      c "sieve :: [Integer] -> [Integer]"
+    p $ l "Filtern Sie zunächst alle Vielfachen einer Zahl heraus:"
+    haskell $ do
+      c "filterMultiples ::"
+      c "    Integer -> [Integer] -> [Integer]"
+    p $ do
+      l "Implementieren Sie diese Funktion mit" >> lib "mod"
+      l "und" >> lib "filter" >> l "."
+   
+sieveExerciseII :: SlideF String
+sieveExerciseII = do
+  h "Übung: Sieb des Eratosthenes" green $ do
+    p $ do
+      l "Implementieren Sie"
+      func "sieve"
+      l ", indem Sie das erste Element behalten"
+      l "und aus dem Rest der Liste alle Vielfachen herrausfiltern."
+      l "Auf den gefilterten Rest der Liste wenden Sie wiederum"
+      func "sieve" >> l "an."    
+    p $ do
+      l "Definieren Sie:"
+    haskell $ do
+      c "primes :: [Integer]"
+      c "primes = sieve [2..]"
+    p $ do
+      l "Geben Sie mit"
+      lib "take"
+      l "die ersten 100 Primzahlen aus."

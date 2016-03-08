@@ -10,16 +10,17 @@ import Helper
 
 slideShow :: SlideF String
 slideShow = do
-  chapter "Rekursion über" "Ganze Zahlen und Listen" seagreen
+  -- chapter "Rekursion über" "Ganze Zahlen und Listen" seagreen
   naturalNumbers
   recursiveFunction
   ex1a
   ex1b
   ex2
-  ghciTips
-  chapter "Noch ein rekursiver Datentyp:" "Listen" maroon
+  -- chapter "Noch ein rekursiver Datentyp:" "Listen" maroon
   lists
   listsExample
+  listsPatternMatching
+  listsPatternMatchingII
   exListsI
   exListsII
   exListsIII
@@ -47,7 +48,7 @@ recursiveFunction :: SlideF String
 recursiveFunction = do
   header "Eine rekursive Funktion" seagreen $ do
     p $ l "Zum Beispiel:"
-    pcode Haskell $ do
+    haskell $ do
       c "sumN :: Integer -> Integer"
       c "sumN 0 = 0"
       c "sumN n = n + sumN (n-1)"
@@ -59,11 +60,11 @@ recursiveFunction = do
       
 ex1a :: SlideF String
 ex1a = do
-  header "Übungen I" darkblue $ do
+  header "Übung Ia" darkblue $ do
     p $ do
-      l "Öffnen Sie eine Datei Numbers.hs"
+      l "Öffnen Sie eine Datei" >> em "Numbers.hs"
       l "und implementieren Sie die Fakultätsfunktion:"
-    pcode Haskell $ do
+    haskell $ do
       c "prod :: Integer -> Integer"
     p $ l "so dass"
     (p $ def "prod n = 1 * 2 * ... * n") <| [center]
@@ -73,9 +74,9 @@ ex1a = do
 
 ex1b :: SlideF String
 ex1b = do
-  header "Übung I" darkblue $ do
+  header "Übung Ib" darkblue $ do
     p $ l "Laden Sie Ihre Datei in den ghci:"
-    pcode Haskell $ do
+    haskell $ do
       c "$ ghci Numbers.hs"
       c "> prod 3"
       c "6"
@@ -86,7 +87,7 @@ ex1b = do
 
 ex2 :: SlideF String
 ex2 = do
-  header "Übung 2" blue $ do
+  header "Übung II" blue $ do
     p $ do
       l "Implementieren Sie"
       a "http://de.wikipedia.org/wiki/Fibonacci-Folge#Definition_der_Fibonacci-Folge"
@@ -99,22 +100,6 @@ ex2 = do
     question $ do
       l "Welche Signatur hat fibonacci?"
       l "Welche Signatur hat gcd?"
-
-ghciTips :: SlideF String
-ghciTips = do
-  header "GHCi Tips" darkorange $ do
-    p $ l "Im" >> ghci
-    p $ do
-      l "Falls sie eine neue Datei laden wollen,"
-      l "dann mit" >> cmd ":load" >> l "oder" >> cmd ":l"
-      l "."
-    pcode Haskell $ c "> :l NeueDatei.hs"
-    p $ do
-      l "Falls sie eine Datei erneut laden wollen,"
-      l "dann mit" >> cmd ":reload" >> l "oder" >> cmd ":r"
-      l "."
-    pcode Haskell $ c "> :r"
-
 
 
 lists :: SlideF String
@@ -139,7 +124,7 @@ listsExample :: SlideF String
 listsExample = do
   header "Noch eine rekursive Funktion" maroon $ do
     p $ l "Betrachten Sie folgende Definition:"
-    pcode Haskell $ do
+    haskell $ do
       c "reverse :: [a] -> [a]"
       c "reverse [] = []"
       c "reverse (x:xs) = reverse xs ++ [x]"
@@ -149,15 +134,57 @@ listsExample = do
     p $ do
       l "Der Append-Operator" >> cmd "(++)"
       l "konkateniert zwei Listen."
-    pcode Haskell $ do
+    haskell $ do
       c "> [1, 2] ++ [3, 4, 5]"
       c "[1, 2, 3, 4, 5]"
+
+listsPatternMatching :: SlideF String
+listsPatternMatching = do
+  h "Pattern-Matching für Listen" darkred $ do
+    p $ do
+      l "Durch Pattern-Matching dekomponiert man"
+      l "eine Datenstruktur. Für Listen bedeutet das"
+      l "eine Zerlegung in" >> em "head"
+      l "und" >> em "tail"
+      l "."
+    haskell $ do
+      c "> let (a:as) = [1,2,3]"
+      c "> a"
+      c "1"
+      c "> as"
+      c "[2,3]"
+    p $ do
+      l "Testen Sie Pattern-Matching im" >> ghci >> l "."
+    question $ do
+      l "Was, wenn Sie zwei Kopfelemente abspalten wollen?"
+
+
+listsPatternMatchingII :: SlideF String
+listsPatternMatchingII = do
+  h "Pattern-Matching in Parametern" darkred $ do
+    p $ do
+      l "Auch beim Aufrufen von Funktionen kann Pattern-Matching"
+      l "nützlich sein:"
+    haskell $ do
+      c "f :: [Integer] -> Integer"
+      c "f (x:y:z:_) = x+y+z"
+    p $ do
+      l "Der Unterstrich _ steht für" >> em "don't-care"
+      l "-Argumente, also Teile einer Datenstruktur,"
+      l "die rechts vom Geleichheitszeichen nicht"
+      l "benötigt werden."
+    question $ do
+      l "Was, wenn die Liste nicht die erwartete"
+      l "Anzahl von Elementen hat?"
+    p $ do
+      l "Testen Sie im" >> ghci >> l "."
+
 
 exListsI :: SlideF String
 exListsI = do
   header "Übungen zu Listen" crimson $ do
     p $ l "Schreiben Sie eine Funktion"
-    pcode Haskell $ c "toList :: Integer -> [Integer]"
+    haskell $ c "toList :: Integer -> [Integer]"
     p $ l "so dass"
     (p $ def "toList n = [1,1, ..., 1] -- n mal 1") <| [center]
     p $ do
@@ -170,7 +197,7 @@ exListsII = do
   header "Übungen zu Listen" crimson $ do
     p $ do
       l "Schreiben Sie die Umkehrfunktion:"
-    pcode Haskell $ do
+    haskell $ do
       c "fromList :: [Integer] -> Integer"
     p $ do
       l "Überlegen Sie sich einen Test für diese beiden Funktionen"
@@ -187,7 +214,7 @@ exListsIII = do
       l "Schreiben Sie eine Funktion" >> cmd "mapF"
       l "die eine Funktion auf jedes Element der Liste anwendet."
       l "Zum Beispiel:"
-    pcode Haskell $ do
+    haskell $ do
       c "> mapF toList [2,3,0,1]"
       c "[[1,1],[1,1,1],[],[1]]"
       c "> mapF fromList it"
@@ -197,6 +224,6 @@ exListsIII = do
     question $ do
       l "Welchen Typ hat mapF?"
     p $ do
-      cmd "mapF" >> l "ist auch unter dem Namen"
-      cmd "map" >> l "im" >> ghci >> l "verfügbar."
+      cmd "mapF" >> l "ist auch als Bibliotheksfunktion"
+      lib "map" >> l "im" >> ghci >> l "verfügbar."
       

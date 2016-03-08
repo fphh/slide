@@ -37,7 +37,9 @@ color :: Colour Double -> (Text, StyleValue)
 color c = "color" .= SRGB.sRGB24show c
 
 red, blue, green, white, black :: (Text, StyleValue)
+white = color CN.white
 red = color CN.red
+yellow = color CN.yellow
 azure = color CN.azure
 blueviolet = color CN.blueviolet
 blue = color CN.blue
@@ -48,7 +50,6 @@ darkred = color CN.darkred
 maroon = color CN.maroon
 green = color CN.green
 darkgreen = color CN.darkgreen
-white = color CN.white
 black = color CN.black
 pink = color CN.pink
 lightblue = color CN.lightblue
@@ -73,6 +74,7 @@ bglightgreen = bgcolor CN.lightgreen
 bgdarksalmon = bgcolor CN.darksalmon
 bgcrimson = bgcolor CN.crimson
 bgseagreen = bgcolor CN.seagreen
+bgdarkblue = bgcolor CN.darkblue
 
 
 fontSize :: Int -> (Text, StyleValue)
