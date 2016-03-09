@@ -23,7 +23,11 @@ expressions :: SlideF String
 expressions = do
   h "Ausdrücke" darkblue $ do
     p $ do
-      l "Alles in Haskell ist ein Ausdruck."
+      l "Ein Haskell-Programm besteht aus"
+      em "Ausdrücken."
+      l "Jedem Ausdruck ist ein "
+      em "Typ"
+      l "zugeordnet."
     p $ do
       l "Einfache Ausdrücke sind z. B. Zahlen, Buchstaben,"
       l "Zeichenketten oder boolsche Ausdrücke:"
@@ -34,14 +38,13 @@ expressions = do
       expr "\"abc\"" >> l ", "
       expr "True" >> l "."
     p $ do
-      l "Mit" >> cmd ":t" >> l "können Sie im" >> ghci
-      l "den Typen eines Ausdrucks erfragen:"
+      cmd ":t" >> l "gibt im" >> ghci
+      l "den Typen eines Ausdrucks zurück:"
     haskell $ do
       c "> :t 5"
       c "5 :: Num a => a"
     p $ do
-      l "Lassen Sie sich die Typen der aufgeführten Ausdrücke"
-      l "ausgeben."
+      l "Ermitteln Sie die Typen der aufgeführten Ausdrücke."
 
 expressionsII :: SlideF String
 expressionsII = do
@@ -93,19 +96,16 @@ letExpr = do
       l "bzw. einfach" >> expr "let ..." 
       l "können Sie im GHCi Funktionen und Ausdrücke definieren."
     p $ do
-      l "Für Definitionen in einer Datei"
+      l "Für Top-Level-Definitionen in einer Datei"
       l "brauchen Sie kein" >> expr "let" >> l "."
     p $ do
       l "Definieren Sie eine Funktion"
       l "sowohl im" >> ghci
       l "als auch in einer Datei."
-{-
     p $ do
-      l "Datein können Sie mit" >> cmd ":load <file>"
-      l "bzw." >> cmd ":reload" >> l "im" >> ghci
-      l "laden. Auch die Kurzformen"
-      cmd ":l" >> l "und" >> cmd ":r" >> l "gibt es."
--}
+      l "Innerhalb eines"
+      expr "let ... in ..."
+      l "-Ausdrucks ist die Reihenfolge egal."
 
 ghciTips :: SlideF String
 ghciTips = do

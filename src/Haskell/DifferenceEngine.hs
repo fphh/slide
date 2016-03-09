@@ -65,7 +65,7 @@ polynom = do
 
 powerFunc :: SlideF String
 powerFunc = do
-  h "Potenzfunktion" darkorange $ do
+  h "Potenzfunktion" darksalmon $ do
     p $ l "Zur Erinnerung die Potenzfunktion:"
     pcode Haskell $ do
       c "(^) :: (Integral b, Num a) => a -> b -> a"
