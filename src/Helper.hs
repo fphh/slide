@@ -122,6 +122,20 @@ lib =
         : []
   in (<| styles) . line
 
+warn :: String -> WordF String
+warn =
+  let styles =
+        bgred
+        : green
+        : fwbold
+        : radius 5
+        : paddingL 10
+        : paddingR 10
+        : paddingT 1
+        : paddingB 1
+        : []
+  in (<| styles) . line
+
 func :: String -> WordF String
 func =
   let styles =

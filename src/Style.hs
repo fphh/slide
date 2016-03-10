@@ -58,6 +58,7 @@ darkorange = color CN.darkorange
 darksalmon = color CN.darksalmon
 crimson = color CN.crimson
 seagreen = color CN.seagreen
+magenta = color CN.magenta
 
 bgcolor :: Colour Double -> (Text, StyleValue)
 bgcolor c = "backgroundColor" .= SRGB.sRGB24show c
