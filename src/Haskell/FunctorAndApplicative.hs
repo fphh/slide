@@ -89,7 +89,7 @@ liftFunc = do
 
 badErrorCorrection :: SlideF String
 badErrorCorrection = do
-  h "Fehlerbehandlung" red $ do
+  h "Fehlerbehandlung mit Maybe" red $ do
     p $ do
       l "Beheben Sie den Fehler in Ihrem Interpreter."
       l "Dazu müssen Sie sowohl dessen Typen anpassen,"
