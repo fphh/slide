@@ -67,7 +67,7 @@ link url = wordT (Link url)
 email :: String -> Free (Word String) ()
 email url = link ("mailto:" ++ url) url
 
-data Language = HTML | JavaScript | Haskell | CLang | CSS | Directory
+data Language = HTML | JavaScript | Haskell | CLang | CSS | Directory | Bash
 
 instance Show Language where
   show HTML = "html"
@@ -75,6 +75,7 @@ instance Show Language where
   show Haskell = "haskell"
   show CLang = "cpp"
   show CSS = "css"
+  show Bash = "bash"
   show _ = "none"
 
 data ParagraphType =

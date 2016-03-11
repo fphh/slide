@@ -9,8 +9,8 @@ import Helper
 
 titlePage :: SlideF String
 titlePage = do
-  slide (word "") $ do
-    para "Funktionale Programmierung mit" <| [pt24, center, fwbold]
+  slide (word "Funktionale Programmierung mit") $ do
+    para "Haskell" <| [pt32, center, fwbold, green]
     pimage "http://upload.wikimedia.org/wikipedia/commons/1/1c/Haskell-Logo.svg" <| [center, width 200, marginL Auto, marginR Auto]
     para "von Dr. Heinrich Hördegen" <| [center]
     pline (email "hoerdegen@funktional.info") <| [center, monospace, green]
