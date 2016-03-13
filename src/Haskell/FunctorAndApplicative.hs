@@ -21,7 +21,7 @@ functor = do
       expr "Functor"
       l "beinhaltet Typen der Form"
       expr "f a"
-      l ", wobei" >> expr "t"
+      l ", wobei" >> expr "f"
       l "ein Typkonstruktor ist,"
       l "der ein Typargument benötigt."
     p $ do

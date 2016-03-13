@@ -110,7 +110,7 @@ inductionProof = do
 
 ex1 :: SlideF String
 ex1 = do
-  h "Übung Induktionsbeweis I" darkorange $ do
+  h "Übung: Induktionsbeweis über Zahlen" darkorange $ do
     p $ do
       l "Beweisen Sie"
     pcenter $ expr "length (replicate n x) = n"
@@ -127,7 +127,7 @@ ex1 = do
 
 ex2 :: SlideF String
 ex2 = do
-  h "Übung Induktionsbeweis II" darkorange $ do
+  h "Übung: Induktionsbeweis über Listen" darkorange $ do
     p $ do
       l "Beweisen Sie:"
     pcenter $ expr "map f . map g = map (f . g)"

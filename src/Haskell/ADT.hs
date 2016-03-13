@@ -75,7 +75,7 @@ caseExpr = do
       l "Pattern Matching können Sie auch mit einem"
       expr "case ... of" >> l "-Ausdruck verwenden:"
     haskell $ do
-      c "not :: Bool -> Integer"
+      c "not :: Bool -> Bool"
       c "not x = case x of"
       c "             False -> True"
       c "             True -> False"
@@ -118,7 +118,8 @@ trees = do
       l "Datenstrukturen können rekursiv definiert werden,"
       l "so z.B. die Liste:"
     haskell $ do
-      c "data List a = Nil | Cons a deriving (Show)"
+      c "data List a ="
+      c "  Nil | Cons a (List a) deriving (Show)"
     p $ do
       l "Eine solche rekursive Struktur eignet sich"
       l "natürlich hervorragend dazu, mit einer rekursiven"
@@ -129,5 +130,4 @@ trees = do
       l "Definieren Sie einen binären Baum."
       l "Definieren Sie eine Funktion, die die"
       l "Knoten eines Baums zählt."
-    p $ do
       l "Zählen Sie die Blätter eines Baums."

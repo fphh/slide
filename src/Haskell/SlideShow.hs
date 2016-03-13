@@ -21,7 +21,7 @@ import qualified Haskell.Verification as Verification
 import Haskell.Title (titlePage, theEnd)
 
 slideShow :: SlideF String
-slideShow = slideShow1
+slideShow = slideShow5
 
 slideShow1 :: SlideF String
 slideShow1 = do
@@ -56,6 +56,7 @@ slideShow5 = do
   titlePage
   ADT.slideShow
   Interpreter.slideShow
+  FunctionTypes.slideShow
   theEnd
 
 
