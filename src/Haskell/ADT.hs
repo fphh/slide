@@ -16,7 +16,6 @@ slideShow = do
   patternMatching
   ex1
   caseExpr
-  maybeType
   trees
 
 intro :: SlideF String
@@ -87,30 +86,6 @@ caseExpr = do
       expr "let"
       l "."
 
-maybeType :: SlideF String
-maybeType = do
-  h "Typvariablen: Maybe a" green $ do
-    p $ do
-      l "Ein wichtiger Daten-Typ ist" >> expr "Maybe a"
-      l "."
-    haskell $ do
-      c "data Maybe a = Nothing | Just a"
-    p $ do
-      l "Der Typkonstruktor" >> expr "Maybe"
-      l "nimmt als Argument einen Typen,"
-      l "repräsentiert durch die Typvariable" >> expr "a" >> l ","
-      l "um einen Typen zu bilden."
-    p $ do
-      l "Lassen Sie sich mit" >> cmd ":info"
-      l "Informationen zu" >> expr "Maybe"
-      l "ausgeben."
-    question $ do
-      l "Wie würden Sie den Typen" >> expr "Maybe a"
-      l "interpretieren? Wo kann er nützlich sein?"
-    p $ do
-      l "Mehr zu" >> expr "Maybe"
-      l "gibt es später..."
-
 trees :: SlideF String
 trees = do
   h "Rekursive Datenstrukturen" green $ do
@@ -127,7 +102,8 @@ trees = do
     p $ do
       em "Übung:"
     p $ do
-      l "Definieren Sie einen binären Baum."
-      l "Definieren Sie eine Funktion, die die"
-      l "Knoten eines Baums zählt."
-      l "Zählen Sie die Blätter eines Baums."
+      l "Definieren Sie einen binären Baum" >> expr "Tree a" >> l "."
+      l "Definieren Sie eine Funktion" >> expr "nodeCount"
+      l ", die die Knoten eines Baums zählt."
+      l "Definieren Sie" >> expr "leafCount"
+      l ", um die Blätter zu zählen."

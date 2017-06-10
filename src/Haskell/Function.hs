@@ -11,12 +11,14 @@ slideShow :: SlideF String
 slideShow = do
   expressions
   expressionsII
-  functions
   letExpr
-  ghciTips
-  lambda
+  letExprII
+  functions
   operators
   operatorsII
+  lambda
+  lambdaII
+  ghciTips
 
   
 expressions :: SlideF String
@@ -70,58 +72,62 @@ expressionsII = do
       l "Liste einfügt."
       l "So entsteht eine Liste, die ein Element länger ist."
 
-  
-functions :: SlideF String
-functions = do
-  h "Funktionsausdrücke" darkblue $ do
-    p $ do
-      l "Funktionen sind ebenfalls Ausdrücke."
-      l "Sie können auf zwei Weisen geschrieben werden:"
-    haskell $ do
-      c "> let f x y = x + y"
-      c "> f 1 2"
-      c "3"
-    p $ l "oder äquivalent:"
-    haskell $ do
-      c "> let g = \\x y -> x + y"
-      c "> g 1 2"
-      c "3"
-
 letExpr :: SlideF String
 letExpr = do
   h "Let ... in ..." darksalmon $ do
     p $ do
       l "Mit"
       expr "let ... in ..."
-      l "bzw. einfach" >> expr "let ..." 
-      l "können Sie im GHCi Funktionen und Ausdrücke definieren."
+      l "können Sie Ausdrücke und Funktionen definieren und verwenden:"
+    haskell $ do
+      c "> let a = 3; b = 7 in 2*(a+b)"
+      c "20"
+      c "> let f x = 2*x in f 3"
+      c "6"
+    p $ do
+      expr "let .. in ..."
+      l "ist selbst ein Ausdruck:"
+    haskell $ do
+      c "> 1 + (let a = 3 in 2*a)"
+      c "7"
+
+
+letExprII :: SlideF String
+letExprII = do
+  h "Let ... in ... (Teil II)" darksalmon $ do
+    p $ do
+      l "Innerhalb eines" >> expr "let"
+      l "ist die Reihenfolge der Definitionen egal:"
+    haskell $ do
+      c "let a = b; b = 3 in a"
+      c "let b = 3; a = b in a      -- äquivalent"
+    p $ do
+      l "Auch rekursive Definitionen sind erlaubt:"
+      
+    haskell $ do
+      c "> let zeros = 0 : zeros in zeros"
+      c "[0,0,0,0,Interupted."
+    p $ do
+      l "Mit Strg-C brechen Sie den unendlichen Stream ab."
+      
+                          
+functions :: SlideF String
+functions = do
+  h "Let ohne in" darksalmon $ do
+    p $ do
+      l "Funktionen und Ausdrücke können im" >> ghci >> l "auch ohne"
+      expr "in"
+      l "definiert werden."
+    haskell $ do
+      c "> let f x y = x + y"
+      c "> let a = 2"
+      c "> f 1 a"
+      c "3"
     p $ do
       l "Für Top-Level-Definitionen in einer Datei"
       l "brauchen Sie kein" >> expr "let" >> l "."
-    p $ do
-      l "Definieren Sie eine Funktion"
-      l "sowohl im" >> ghci
-      l "als auch in einer Datei."
-    p $ do
-      l "Innerhalb eines"
-      expr "let ... in ..."
-      l "-Ausdrucks ist die Reihenfolge egal."
-
-ghciTips :: SlideF String
-ghciTips = do
-  header "GHCi Tips" darkorange $ do
-    p $ l "Im" >> ghci
-    p $ do
-      l "Falls sie eine neue Datei laden wollen,"
-      l "dann mit" >> cmd ":load" >> l "oder" >> cmd ":l"
-      l "."
-    pcode Haskell $ c "> :l NeueDatei.hs"
-    p $ do
-      l "Falls sie eine Datei erneut laden wollen,"
-      l "dann mit" >> cmd ":reload" >> l "oder" >> cmd ":r"
-      l "."
-    pcode Haskell $ c "> :r"
-
+      
+      
 
 lambda :: SlideF String
 lambda = do
@@ -155,7 +161,8 @@ operators = do
       expr "(&&)" >> l ","
       expr "(||)" >> l ","
       expr "(/=)" >> l ","
-      expr "(:)" >> l "."
+      expr "(:)" >> l ","
+      expr "(,)" >> l "..."
     p $ do
       l "Wenn Sie Operatoren in" >> em "infix"
       l "-Schreibweise verwenden, können Sie die Klammern"
@@ -168,6 +175,25 @@ operators = do
     p $ do
       l "Lassen Sie sich die Typen der aufgeführten"
       l "Funktionen ausgeben."
+
+lambdaII :: SlideF String
+lambdaII = do
+  h "Lambda-Ausdrücke (Teil II)" darkblue $ do
+    p $ do
+      l "Funktionsdefinitionen könne auch mit Lambda-Ausdrücken"
+      l "vorgenommen werden."
+      l "Alle vier Definitionenen sind identisch:"
+    haskell $ do
+      c "> let f x y = x + y"
+      c "> let f x = \\y -> x + y"
+      c "> let f = \\x y -> x + y"
+      c "> let f = (+)"
+    p $ do
+      l "Der Schrägstrich \\ steht für den griechischen"
+      l "Buchstaben Lambda."
+    p $ do
+      l "Der Funktionskörper steht nach dem Pfeil (->)."
+
 
 operatorsII :: SlideF String
 operatorsII = do
@@ -184,3 +210,19 @@ operatorsII = do
       c "2"
     p $ do
       l "Testen Sie" >> lib "rem" >> l "im" >> ghci >> l "."
+
+ghciTips :: SlideF String
+ghciTips = do
+  header "GHCi Tips" darkorange $ do
+    p $ l "Im" >> ghci
+    p $ do
+      l "Falls sie eine neue Datei laden wollen,"
+      l "dann mit" >> cmd ":load" >> l "oder" >> cmd ":l"
+      l "."
+    pcode Haskell $ c "> :l NeueDatei.hs"
+    p $ do
+      l "Falls sie eine Datei erneut laden wollen,"
+      l "dann mit" >> cmd ":reload" >> l "oder" >> cmd ":r"
+      l "."
+    pcode Haskell $ c "> :r"
+

@@ -2,31 +2,6 @@
 
 module D3.D3b where
 
-{-
-
-* Aufbau großer Graphiken in Ebenen (z-order)
-* svg und inner mit margin
-
-* viewbox-Attribut
-* canvas in IE
-
-
-* Referenzieren von urls im chart überall aus DOM möglich
-
-
-<image x="20" y="10" width="320" height="240" xlink:href="raupen.jpg"/>
-* webpack/uglify
-* jsdom/serverside/nodejs
-* es2015 import/export
-* selectionen in variablen speichern statt nochmal select aufrufen
-* Pfad-Element Punkte pushen
-
-* Javascript
-
-
--}
-
-
 import Style
 import Slide
 import Helper
@@ -202,7 +177,7 @@ barChartExample = do
       l "Benutzen Sie die x- und y-Skalen, um die x-Position bzw."
       l "Höhe Ihrer Rechtecke zu berechnen."
     hint $ do
-      em "x.rangeBands()" >> l "liefert die Breite der Rechtecke zurück."
+      em "x.rangeBand()" >> l "liefert die Breite der Rechtecke zurück."
     p $ do
       l "Im Anschluss erweitern Sie Ihre Lösung"
       a "html/myD3Solutions/example2/index_v2.html" "folgendermaßen."
@@ -315,15 +290,15 @@ lineFunction = do
       d3js >> l "stellt mehrere Generatoren für Formen bereit,"
       l "unter anderem für Linien."
     pcode JavaScript $ do
-      c "var line = d3.svg.line();"
+      c "var myLine = d3.svg.line();"
       c "    .x(function(d, i) { return xscale(d.x); })"
       c "    .y(function(d, i) { return yscale(d.y); });"
     p $ do
-      l "Mit der" >> em "line()" >> l "-Funktion können"
+      l "Mit der" >> em "myLine()" >> l "-Funktion können"
       l "sie bequem einen Pfad zeichnen."
     pcode JavaScript $ do
       c "var path = svg.append('path');"
-      c "path.attr('d', line(dataArray));"
+      c "path.attr('d', myLine(dataArray));"
     p $ do
       l "Ändern sich die daten, setzen Sie" >> attr "d" >> l "neu."
 
@@ -454,7 +429,7 @@ viewbox :: SlideF String
 viewbox = do
   h "Ausdehnung und Skalierung" green $ do
     p $ do
-      l "Will man eine skalierend Graphik,"
+      l "Will man eine skalierende Graphik,"
       l "sollte man das" >> attr "viewbox" >> l "-Attibut"
       l "setzen. Auch kann man" >> attr "aspectRatio"
       l "setzen, um das Verhältnis zwischen Höhe und Breite"
@@ -470,9 +445,11 @@ viewbox = do
       attr "width" >> l "und" >> attr "height"
       l "des SVG-Tags setzt man dann auf" >> em "'100%'." <| [monospace]
     p $ do
-      l "Es gibt einen CSS-Style"
-      l "der verhindert, dass Linien in die Breite skalieren."
-
+      l "Der CSS-Style" >> em "vector-effect"
+      l "verhindert, dass Linien in die Breite skalieren."
+      l "Man sollte ihn auf" >> em "non-scaling-stroke"
+      l "setzen."
+      
 webpackSlide :: SlideF String
 webpackSlide = do
   h "Webpack" green $ do

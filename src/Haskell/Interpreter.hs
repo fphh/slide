@@ -19,7 +19,8 @@ slideShow = do
   interpretFunc
   test
   badError
-
+  maybeType
+  
 {-
 interprAndComp :: SlideF String
 interprAndComp = do
@@ -172,8 +173,33 @@ badError = do
     question $ do
       l "Wer sieht, warum?"
     p $ do
-      l "Schreiben Sie einen Ausdruck, der den"
-      l "Makel entblößt."
+      l "Schreiben Sie einen Ausdruck, der das"
+      l "Problem aufzeigt."
     question $ do
       l "Verbesserungsvorschläge?"
 
+
+maybeType :: SlideF String
+maybeType = do
+  h "Maybe a" green $ do
+    p $ do
+      l "Ein wichtiger Daten-Typ ist" >> expr "Maybe a"
+      l "."
+    haskell $ do
+      c "data Maybe a = Nothing | Just a"
+    p $ do
+      l "Der Typkonstruktor" >> expr "Maybe"
+      l "nimmt als Argument einen Typen,"
+      l "repräsentiert durch die Typvariable" >> expr "a" >> l ","
+      l "um einen Typen zu bilden."
+    p $ do
+      l "Lassen Sie sich mit" >> cmd ":info"
+      l "Informationen zu" >> expr "Maybe"
+      l "ausgeben."
+    question $ do
+      l "Wie würden Sie den Typen" >> expr "Maybe a"
+      l "interpretieren?"
+    p $ do
+      l "Definieren Sie" >> expr "interpret"
+      l "um, so dass ein" >> expr "Maybe a"
+      l "zurückgegeben wird."

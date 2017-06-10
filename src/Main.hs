@@ -3,6 +3,8 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE TypeApplications #-}
 
 
 module Main where
@@ -24,27 +26,33 @@ import qualified Data.Aeson as Aeson
 import qualified Data.Text as Text
 
 import React.Flux
+import React.Flux.Store
 
 import Data.Monoid ((<>))
 
 import qualified Slide as Slide
+
+import qualified Data.JSString as JSString
 -- import SlideShow (slideShow)
 
 -- import D3b (slideShow)
+
+-- import D3.D3b (slideShow)
 
 import Haskell.SlideShow (slideShow)
 
 foreign import javascript safe "highlightCode()" highlightCode :: IO ()
 foreign import javascript safe "$r = getLastKey()" getLastKey :: IO Int
 
-data View = SlideView | PrintView | TableOfContentView | LinkView
-  deriving (Generic, NFData)
+data SView = SlideView | PrintView | TableOfContentView | LinkView
+  deriving (Eq, Generic, NFData)
 
 data AppState a = AppState {
-  pageNumber :: a,
-  slides :: [Slide.SlideF String],
-  numOfSlides :: Int,
-  sView :: View }
+  pageNumber :: a
+  , slides :: [Slide.SlideF String]
+  , numOfSlides :: Int
+  , sView :: SView
+  } deriving (Eq)
 
 instance Functor AppState where
   fmap f (AppState x tlk len v) = AppState (f x) tlk len v
@@ -53,7 +61,7 @@ data Action =
   JumpToPage Int
   | HighlightCode
   | KeyPressed
-  | SetView View
+  | SetView SView
   deriving (Generic, NFData)
 
 instance StoreData (AppState Int) where
@@ -78,15 +86,17 @@ instance StoreData (AppState Int) where
 
     transform (SetView v) appState = return $ appState { sView = v }
        
-store :: ReactStore (AppState Int)
-store = mkStore $ AppState 0 slides (length slides) SlideView
+-- store :: NewReactStore (AppState Int)
+initialAppState :: AppState Int
+initialAppState = AppState 0 slides (length slides) SlideView
   where slides = Slide.toSlides slideShow
 
 dispatch :: Action -> [SomeStoreAction]
-dispatch a = [SomeStoreAction store a, SomeStoreAction store HighlightCode]
+dispatch a = [someStoreAction @(AppState Int) a, someStoreAction @(AppState Int) HighlightCode]
 
-app :: ReactView ()
-app = defineControllerView "app" store $ \state () -> do
+
+app :: View '[]
+app = mkControllerView @'[StoreArg (AppState Int)] "app" $ \state -> do
   case sView state of
    SlideView -> slideView state
    PrintView -> printView state
@@ -106,7 +116,7 @@ linkView (AppState _ slides _ sv) = do
   let links = concat $ concatMap extractLinks slides
       f :: (String, String) -> ReactElementM ViewEventHandler ()
       f (url, _) = div_ [] $ do
-        a_ ["href" $= Text.pack url, "target" $= "_blank" ] (elemText url)
+        a_ ["href" $= JSString.pack url, "target" $= "_blank" ] (elemString url)
   backToSlideShow      
   mapM_ f links
   backToSlideShow
@@ -140,20 +150,20 @@ tocView :: AppState Int -> ReactElementM ViewEventHandler ()
 tocView (AppState _ slides _ sv) = do
   let idx = [0..]
       cb page _ _ =
-        [SomeStoreAction store (JumpToPage page)]
+        [someStoreAction @(AppState Int) (JumpToPage page)]
         ++ dispatch (SetView SlideView)
       f 0 _ = h3_ [] (elemText "Table of Content")
       f page s = div_ [ "className" $= "tableOfContent"] $ do
-        div_ [ "className" $= "toc-page-number"] (elemText (show (page+1) ++ "."))
+        div_ [ "className" $= "toc-page-number"] (elemString (show (page+1) ++ "."))
         toTocItem page sv s
   backToSlideShow
   zipWithM_ f idx slides
   backToSlideShow
 
-toTocItem :: Int -> View -> Slide.SlideF String -> ReactElementM ViewEventHandler ()
+toTocItem :: Int -> SView -> Slide.SlideF String -> ReactElementM ViewEventHandler ()
 toTocItem page sv (Free (Slide.Slide attrs hdr paras (Pure _))) =
   let cb page _ _ =
-        [SomeStoreAction store (JumpToPage page)]
+        [someStoreAction @(AppState Int) (JumpToPage page)]
         ++ dispatch (SetView SlideView)
   in span_ [ "className" $= "toc-item"
            , onClick (cb page) 
@@ -173,11 +183,11 @@ printView :: AppState Int -> ReactElementM ViewEventHandler ()
 printView (AppState _ slides _ sv) = do
   let idx = [0..]
       cb page _ _ =
-        [SomeStoreAction store (JumpToPage page)]
+        [someStoreAction @(AppState Int) (JumpToPage page)]
         ++ dispatch (SetView SlideView)
       f page s = div_ [ "className" $= "print-slide" ] $ do
         div_ [ "className" $= "page-number"
-             , onClick (cb page) ] (elemText ("Slide " ++ show (page+1)))
+             , onClick (cb page) ] (elemString ("Slide " ++ show (page+1)))
         toSlide sv s
   backToSlideShow
   zipWithM_ f idx slides
@@ -191,17 +201,17 @@ toWord (Free (Slide.Word Slide.LineBreak attrs w k)) = do
 toWord (Free (Slide.Word (Slide.Link url) attrs w k)) = do
   span_ [ "className" $= "word" ] $
     span_ [ "style" @= attrs ] $
-      a_ ["href" $= Text.pack url, "target" $= "_blank" ] (elemText w)
+      a_ ["href" $= JSString.pack url, "target" $= "_blank" ] (elemString w)
   toWord k
 toWord (Free (Slide.Word _ attrs w k)) = do
   span_ [ "className" $= "word"] $
-    span_ ["style" @= attrs ] (elemText w)
+    span_ ["style" @= attrs ] (elemString w)
   toWord k
 
 toLine :: Slide.WordF String -> ReactElementM ViewEventHandler ()
 toLine (Pure _) = return ()
 toLine (Free (Slide.Word _ attrs w k)) = do
-  span_ [ "style" @= attrs ] (elemText w)
+  span_ [ "style" @= attrs ] (elemString w)
   br_ []
   toLine k
 
@@ -211,16 +221,16 @@ toParagraph (Free (Slide.Paragraph Slide.Text attrs ws k)) = do
   p_ [ "className" $= "paragraph-text", "style" @= attrs ] (toWord ws)
   toParagraph k
 toParagraph (Free (Slide.Paragraph (Slide.Code language) attrs ws k)) = do
-  pre_ $ code_ [ "className" $= (Text.pack $ show language)
+  pre_ $ code_ [ "className" $= (JSString.pack $ show language)
                , "style" @= attrs ] (toLine ws)
   toParagraph k
 toParagraph (Free (Slide.Paragraph (Slide.Image url) attrs ws k)) = do
   p_ [ "className" $= "paragraph-image", "style" @= attrs ] $
-    img_ [ "src" $= Text.pack url ] (return ())
+    img_ [ "src" $= JSString.pack url ] (return ())
   toParagraph k
 
 
-toSlide :: View -> Slide.SlideF String -> ReactElementM ViewEventHandler ()
+toSlide :: SView -> Slide.SlideF String -> ReactElementM ViewEventHandler ()
 toSlide sv (Free (Slide.Slide attrs hdr paras (Pure _))) = do
   let cls = case sv of
         SlideView -> "content"
@@ -256,4 +266,5 @@ footer _ = do
 
 main :: IO ()
 main = do
-  reactRender "app" app ()
+  registerInitialStore initialAppState
+  reactRenderView "app" app

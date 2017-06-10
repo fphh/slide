@@ -33,7 +33,8 @@ lazyIntro = do
     haskell $ do
       c "> mult (1 + 2) (2 + 3)"
     p $ do
-      l "Ist kein Redex vorhanden, ist der Ausdruck in Normalform."
+      l "Ist kein Redex vorhanden, ist der Ausdruck in"
+      em "Normalform" >> l "."
 
 evalStrat :: SlideF String
 evalStrat = do
@@ -63,12 +64,15 @@ evalStratII = do
     p $ do
       l "Wieviele Reduktionsschritte brauchen Sie jeweils?"
     p $ do
+      l "Das Prelude definiert eine Funktion"
+      expr "const x y = x" >> l "."
+    p $ do
       l "Werten sie die Ausdrücke" >> expr "[1..]"
-      l "und" >> expr "const [1..] 5" >> l "im"
+      l "und" >> expr "const 5 [1..]" >> l "im"
       ghci >> l "aus. Mit" >> em "Strg-C"
       l "können Sie eine Berechnung unterbrechen."
     question $
-      l "Welche Strategie wendet Haskell an?"
+      l "Welche Evaluierungsstrategie wendet Haskell an?"
 
 
 lazyEval :: SlideF String
@@ -77,15 +81,15 @@ lazyEval = do
     p $ do
       l "Haskell verwendet" >> em "Lazy Evaluation" >> l ", d.h:"
     p $ do
-      l "Die Strategie" >> em "outermos" >> l "zusammen mit"
+      l "Die Strategie" >> em "outermost" >> l "zusammen mit"
       em "sharing" >> l "."
     p $ do
       em "Sharing" >> l "bedeutet, dass Ausdrücke, die an die"
       l "gleiche Variable gebunden sind, nur einmal ausgewertet"
       l "werden. Solange ein solcher Redex nicht ausgewertet"
       l "wurde, nennt man ihn" >> em "Thunk" >> l "."
-      em "Thunks" >> l ", die für das Ergebnis nicht benötigt werden"
-      l "müssen, bleiben unausgewertet."
+      em "Thunks" >> l ", die für das Ergebnis nicht benötigt werden,"
+      l "bleiben unausgewertet."
     p $ do
       l "Werten Sie" >> expr "square (1+2)"
       l "mit dieser Strategie nocheinmal aus."
@@ -103,5 +107,5 @@ lazyEvalII = do
       c "> let xs = iterate (\\x -> 2*x+3) 0"
       c "> xs !! 5"
       c "93"
-      c "takeWhile (< 500) xs"
+      c "> takeWhile (< 500) xs"
       c "[0,3,9,21,45,93,189,381]"

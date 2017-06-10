@@ -33,7 +33,7 @@ monadDefinition = do
       expr "Functor" >> l "und" >> expr "Applicative"
       l "sein."
     p $ do
-      l "Beispiele:" >> expr "[a],Maybea,Eitherba,IOa,..."
+      l "Beispiele:" >> expr "[a], Maybe a, Either b a, IO a, ..."
     p $ do
       l "Dokumentation finden Sie"
       a "http://hackage.haskell.org/package/base-4.6.0.1/docs/Control-Monad.html"

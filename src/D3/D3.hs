@@ -61,7 +61,7 @@ directory = do
       c "myD3/"
       c "    d3/"
       c "        d3.min.js"
-      c "    example1/"
+      c "    exampleTemplate/"
       c "        index.html"
       c "        script.js"
       c "        format.css"
@@ -140,7 +140,8 @@ styleAndAttr = do
       l "Mit der Chained Method" >> m "attr"
       l "können Sie den Elementen Attribute geben."
       l "Geben Sie einem Ihrer Listen-Elemente"
-      l "z.B. ein class-Attribut und stylen Sie das Element darüber."
+      l "z.B. ein Attribut" >> attr "class"
+      l "und stylen Sie das Element darüber."
     p $ do
       l "Wenn Sie" >> tag "ol" >> l "gewählt haben"
       l "können Sie z.B. das Attribut" >> attr "start" >> l "setzen."
@@ -201,7 +202,7 @@ enterSelectionExercice = do
       l "Bauen Sie mit diesen Namen eine Liste."
       l "Verwenden Sie Data Joins und die enter-Selektion."
     p $ do
-      l "Geben sie den" >> (l "geraden" <| [red])
+      l "Geben sie " >> (l "geraden" <| [red])
       l "Punkten eine andere Textfarbe als"
       l "ungeraden" <| [green] >> l "."
     p $ do
@@ -267,7 +268,7 @@ exerciseCircle = do
     pcode JavaScript $ do
       c "> var color = d3.scale.category10()"
       c "      .domain([0, 9])"
-      c "> color(4)"
+      c "> color(2)"
       c "> \"#9467bd\""
 
 textElement :: SlideF String
@@ -318,7 +319,7 @@ groupElement = do
       c "group.append('text');"
     p $ do
       l "Das wichtigste Attribute ist" >> attr "transform" >> l "."
-      l "Um das Gruppenelement samt Inhalt entlang der x/y-Achsen"
+      l "Um das Gruppenelement samt Inhalt entlang den x/y-Achsen"
       l "zu verschieben, setzen Sie es auf" >> em "translate(x, y)" >> l ","
       l "wobei" >> em "x" >> l "und" >> em "y"
       l "die Zahl der Pixel angibt."
@@ -342,8 +343,8 @@ mouseEvents = do
       a "https://developer.mozilla.org/en-US/docs/Web/Events#Standard_events" "Mouse Events"
       l "."
     p $ do
-      l "Im Callback bekommen Sie mit" >> m "d3.select(this)"
-      l "einen Zeiger auf das Mouse-Event zurück."
+      l "Im Callback bekommen Sie mit" >> m "d3.mouse(this)"
+      l "ein Array mit den Mauskoordinaten zurück."
 
 tooltipExercise :: SlideF String
 tooltipExercise = do
@@ -373,7 +374,7 @@ selectionII = do
     p $ do
       l "Die Selektionen entstehen beim Aufrufen von" >> m "data"
     pcode JavaScript $ do
-      c "var selection = svg"
+      c "var circles = svg"
       c "    .selectAll('circle')"
       c "    .data(newData);"
     p $ do
@@ -391,7 +392,7 @@ selectionExit = do
       l "Die Exit-Selektion dient üblicherweise dazu,"
       l "Elemente zu entfernen, indem man" >> m "remove" >> l "aufruft."
     pcode JavaScript $ do
-      c "selection"
+      c "circles"
       c "    .exit()"
       c "    .remove();"
 
@@ -402,7 +403,7 @@ selectionUpdate = do
       l "Die Update-Selektion dient dazu, die Attribute und Styles der"
       l "verbliebenen Elemente neu zu setzen:"
     pcode JavaScript $ do
-      c "selection"
+      c "circles"
       c "    .attr('cx', function (d, idx) { ... });"
       c "    .attr('cy', function (d, idx) { ... });"
       c "    .style('fill', 'yellow');"
@@ -417,11 +418,11 @@ selectionEnterAndUpdate = do
       l "Sobald man die enter-Selektion bearbeitet hat"
       l "vereinen sich update- und enter-Selektion."
     pcode JavaScript $ do
-      c "var selection = svg"
+      c "var circles = svg"
       c "    .selectAll('circle')"
       c "    .data(newData);"
-      c "selection.enter().append('circle');"
-      c "selection.attr('r', 99);"
+      c "circles.enter().append('circle');"
+      c "circles.attr('r', 99);   // <- enter+update"
     p $ do
       l "Im Beispiel bekommen alle Kreise den Radius 99,"
       l "sowohl die neuen als auch die schon vorhandenen."
@@ -438,11 +439,11 @@ selectionDataIndex = do
       l "während die Selektionen berechnet werden."
       l "Zusätzlich gibt es die Möglichkeit, eine Key-Funktion anzugeben:"
     pcode JavaScript $ do
-      c "function identity(x) { return x; }"
+      c "function key(x) { return x; }"
       c "var letters = 'abcdefgh'.split('');"
-      c "var selection = svg"
+      c "var circles = svg"
       c "    .selectAll('circle')"
-      c "    .data(letters, identity);"
+      c "    .data(letters, key);"
     p $ do
       l "Im Beispiel werden die Daten jetzt über ihren Inhalt,"
       l "nämlich den Buchstaben, identifiziert."
@@ -464,7 +465,7 @@ transitions = do
     p $ do
       l "Bei Transtionen auf dem selben Element unterbricht"
       l "die jungere die ältere."
-      l "Die ältere Transition bleibt möglicherweise unvollständig."
+      l "Die ältere Transition bleibt möglicherweise unvollständig (schlecht)."
 
 
 selectionExercise :: SlideF String

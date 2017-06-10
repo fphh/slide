@@ -90,7 +90,7 @@ deBegin = do
       l "und eine Liste"
       expr "xs = [p(0), p(1), p(2), p(3), p(4)]."
     p $ do
-      l "Benutzen Sie dazu die Funktion map."
+      l "Benutzen Sie dazu die Funktion" >> lib "map" >> l "."
     p $ do
       l "Vergessen Sie die Signaturen nicht."
 

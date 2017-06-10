@@ -24,13 +24,14 @@ data WordType =
   SomeWord
   | Link Url
   | LineBreak
-  deriving (Show)
+  deriving (Eq, Show)
 
 data Word a k = Word {
-  type_ :: WordType,
-  style_ :: StyleAttrs,
-  word_ :: a,
-  cont_ :: k } deriving (Functor, Show)
+  type_ :: WordType
+  , style_ :: StyleAttrs
+  , word_ :: a
+  , cont_ :: k
+  } deriving (Eq, Functor, Show)
 
 type WordF a = Free (Word a) ()
 
@@ -67,7 +68,16 @@ link url = wordT (Link url)
 email :: String -> Free (Word String) ()
 email url = link ("mailto:" ++ url) url
 
-data Language = HTML | JavaScript | Haskell | CLang | CSS | Directory | Bash
+data Language =
+  HTML
+  | JavaScript
+  | Haskell
+  | CLang
+  | CSS
+  | Directory
+  | Bash
+  deriving (Eq)
+
 
 instance Show Language where
   show HTML = "html"
@@ -82,13 +92,14 @@ data ParagraphType =
   Text
   | Code Language
   | Image Url
-  deriving (Show)
+  deriving (Eq, Show)
 
 data Paragraph a k = Paragraph {
-  ptype_ :: ParagraphType,
-  pstyle_ :: StyleAttrs,
-  pword_ :: Free (Word a) (),
-  pcont_ :: k } deriving (Show, Functor)
+  ptype_ :: ParagraphType
+  , pstyle_ :: StyleAttrs
+  , pword_ :: Free (Word a) ()
+  , pcont_ :: k
+  } deriving (Eq, Show, Functor)
 
 instance Style (Paragraph a) where
   style (k, v) (Free (Paragraph t s w c)) = Free (Paragraph t newSty w c')
@@ -112,10 +123,11 @@ pimage url = Free (Paragraph (Image url) emptyAttrs (Pure ()) (Pure ()))
 
 
 data Slide a k = Slide {
-  sstyle_ :: StyleAttrs,
-  sheader_ :: Free (Word a) (),
-  sparagraph_ :: Free (Paragraph a) (),
-  scont_ :: k } deriving (Show, Functor)
+  sstyle_ :: StyleAttrs
+  , sheader_ :: Free (Word a) ()
+  , sparagraph_ :: Free (Paragraph a) ()
+  , scont_ :: k
+  } deriving (Eq, Show, Functor)
 
 type SlideF a = Free (Slide a) ()
 

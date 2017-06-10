@@ -26,15 +26,17 @@ executable slide
                        Haskell.Title,
                        Haskell.Recursion
   -- other-extensions:    
-  build-depends:       base >=4.8 && <4.9,
-                       react-flux,
+  build-depends:       base,
+                       -- react-flux,
+                       react-hs,
                        text,
                        deepseq,
                        aeson,
                        colour,
                        free,
                        unordered-containers,
-                       transformers
+                       transformers,
+                       ghcjs-base ==0.2.0.0
   hs-source-dirs:      src
   default-language:    Haskell2010
-  ghcjs-options: -O -Wall
+  ghcjs-options: -O2 -Wall -dedupe
